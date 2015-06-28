@@ -1,8 +1,56 @@
 #include <iostream>
+#include <cassert> 
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 namespace Stepic {
+	// arrays
+	int ** Create2dArray(size_t x, size_t y) {
+		// low heap fragmentation method
+		int ** arr = new int *[x];
+		arr[0] = new int[x*y];
+		for (size_t i = 1; i < x; i++)
+			arr[i] = arr[i - 1] + y;
+		return arr;
+	}
+	void free2dArray(int ** arr) {
+		delete[] arr[0];
+		delete[] arr;
+	}
+	void swap_min(int **mt, int m, int n) {
+		int min = mt[0][0], minI = 0;
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				if (mt[i][j] < min) {
+					min = mt[i][j];
+					minI = i;
+				}
+		if (minI != 0) {
+			int * buf = mt[0];
+			mt[0] = mt[minI];
+			mt[minI] = buf;
+		}
+	}
+	int ** transpose(const int * const * m, size_t x, size_t y) {
+		int ** mt = new int *[y];
+		mt[0] = new int[x*y];
+
+		for (int i = 0; i < y; i++) {
+			for (int j = 0; j < x; j++)
+				mt[i][j] = m[j][i];
+			mt[i + 1] = mt[i] + x;
+		}
+		return mt;
+	}
+	void printArray(const int * const * m, size_t x, size_t y) {
+		cout << "****array****" << endl;
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < y; j++)
+				cout << m[i][j] << " ";
+			cout << endl;
+		}
+	}
 	// strings
 	class String {
 	private:
@@ -23,6 +71,16 @@ namespace Stepic {
 		}
 		~String() {
 			delete[] this->str_;
+		}
+
+		String &operator=(const String &str) {
+			if (this != &str) {
+				String pattern(str);
+
+				char *buf = this->str_;
+				this->str_ = pattern.str_;
+				pattern.str_ = buf;
+			}
 		}
 		size_t size() const {
 			return strlen(this->str_);
@@ -95,7 +153,7 @@ namespace Stepic {
 			to[x++] = from[i];
 		to[x] = '\0';
 	}
-	// I\O
+	// I/O
 	char *getline() {
 		int count = 0, memory = 2;
 		char next;
@@ -126,7 +184,7 @@ namespace Stepic {
 		while (cin.get(next) && next == ' ');
 		cout << next;
 		last = next;
-		
+
 		// logic
 		while (cin.get(next)) {
 			if (last != ' ' || next != ' ')
@@ -134,51 +192,111 @@ namespace Stepic {
 			last = next;
 		}
 	}
-	// arrays
-	int ** Create2dArray(size_t x, size_t y) {
-		// low heap fragmentation method
-		int ** arr = new int *[x];
-		arr[0] = new int[x*y];
-		for (size_t i = 1; i < x; i++)
-			arr[i] = arr[i - 1] + y;
-		return arr;
-	}
-	void free2dArray(int ** arr) {
-		delete[] arr[0];
-		delete[] arr;
-	}
-	void swap_min(int **mt, int m, int n) {
-		int min = mt[0][0], minI = 0;
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				if (mt[i][j] < min) {
-					min = mt[i][j];
-					minI = i;
-				}
-		if (minI != 0) {
-			int * buf = mt[0];
-			mt[0] = mt[minI];
-			mt[minI] = buf;
-		}
-	}
-	int ** transpose(const int * const * m, size_t x, size_t y) {
-		int ** mt = new int *[y];
-		mt[0] = new int[x*y];
+	// Object-oriented programming
+	struct Expression {
+		virtual ~Expression() {}
+		virtual double evaluate() const {}
+	};
+	struct Number : Expression {
+		Number(double value) : value_(value)
+		{}
 
-		for (int i = 0; i < y; i++) {
-			for (int j = 0; j < x; j++)
-				mt[i][j] = m[j][i];
-			mt[i + 1] = mt[i] + x;
+		double value() const {
+			return value_;
 		}
-		return mt;
-	}
-	void printArray(const int * const * m, size_t x, size_t y) {
-		cout << "****array****" << endl;
-		for (int i = 0; i < x; i++) {
-			for (int j = 0; j < y; j++)
-				cout << m[i][j] << " ";
-			cout << endl;
+
+		double evaluate() const {
+			return value_;
 		}
+
+	private:
+		double value_;
+	};
+	struct BinaryOperation : Expression {
+		enum {
+			PLUS = '+',
+			MINUS = '-',
+			DIV = '/',
+			MUL = '*'
+		};
+
+		BinaryOperation(Expression const *left, int op, Expression const *right) : left_(left), op_(op), right_(right) {
+			assert(left_ && right_);
+		}
+
+		~BinaryOperation() {
+			delete left_;
+			delete right_;
+		}
+
+		Expression const *left() const {
+			return left_;
+		}
+
+		Expression const *right() const {
+			return right_;
+		}
+
+		int operation() const {
+			return op_;
+		}
+
+		double evaluate() const {
+			double left = left_->evaluate();
+			double right = right_->evaluate();
+
+			switch (op_) {
+				case PLUS: return left + right;
+				case MINUS: return left - right;
+				case DIV: return left / right;
+				case MUL: return left * right;
+			}
+			assert(0);
+			return 0.0;
+		}
+
+	private:
+		Expression const *left_;
+		Expression const *right_;
+		int op_;
+	};
+	struct FunctionCall : Expression {
+		FunctionCall(std::string const &name, Expression const *arg) : name_(name), arg_(arg) {
+			assert(arg_);
+			assert(name_ == "sqrt" || name_ == "abs");
+		}
+		~FunctionCall() {
+			delete arg_;
+		}
+
+		std::string const & name() const {
+			return name_;
+		}
+
+		Expression const *arg() const {
+			return arg_;
+		}
+		double evaluate() const {
+			double value = arg_->evaluate();
+			if (name_ == "sqrt")
+				return std::sqrt(value);
+			if (name_ == "abs")
+				return value < 0 ? -value : value;
+		}
+	private:
+		std::string const name_;
+		Expression const *arg_;
+	};
+	// Some hacky things
+	bool check_equals(Expression const *left, Expression const *right) {
+		// check for type equal
+		int vptrLeft = *(int*)left;
+		int vptrRight = *(int*)right;
+
+		if (vptrLeft == vptrRight)
+			return true;
+		else
+			return false;
 	}
 }
 
