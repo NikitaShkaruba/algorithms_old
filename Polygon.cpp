@@ -193,37 +193,32 @@ namespace Stepic {
 		}
 	}
 	// Object-oriented programming
+	struct Scope {
+		virtual ~Scope() { }
+		virtual double variableValue(std::string const &name) const = 0;
+	};
 	struct Expression {
 		virtual ~Expression() {}
-		virtual double evaluate() const {}
+
+		virtual double evaluate(Scope* s) const {}
 	};
 	struct Number : Expression {
-		Number(double value) : value_(value)
-		{}
-
+		Number(double value) : value_(value) {}
+	
 		double value() const {
 			return value_;
 		}
-
-		double evaluate() const {
+		double evaluate(Scope* s) const {
 			return value_;
 		}
-
+	
 	private:
 		double value_;
 	};
 	struct BinaryOperation : Expression {
-		enum {
-			PLUS = '+',
-			MINUS = '-',
-			DIV = '/',
-			MUL = '*'
-		};
-
 		BinaryOperation(Expression const *left, int op, Expression const *right) : left_(left), op_(op), right_(right) {
 			assert(left_ && right_);
 		}
-
 		~BinaryOperation() {
 			delete left_;
 			delete right_;
@@ -232,19 +227,16 @@ namespace Stepic {
 		Expression const *left() const {
 			return left_;
 		}
-
 		Expression const *right() const {
 			return right_;
 		}
-
 		int operation() const {
 			return op_;
 		}
-
-		double evaluate() const {
-			double left = left_->evaluate();
-			double right = right_->evaluate();
-
+		double evaluate(Scope* s) const {
+			double left = left_->evaluate(s);
+			double right = right_->evaluate(s);
+	
 			switch (op_) {
 				case PLUS: return left + right;
 				case MINUS: return left - right;
@@ -254,8 +246,14 @@ namespace Stepic {
 			assert(0);
 			return 0.0;
 		}
-
+	
 	private:
+		enum {
+			PLUS = '+',
+			MINUS = '-',
+			DIV = '/',
+			MUL = '*'
+		};
 		Expression const *left_;
 		Expression const *right_;
 		int op_;
@@ -272,23 +270,94 @@ namespace Stepic {
 		std::string const & name() const {
 			return name_;
 		}
-
 		Expression const *arg() const {
 			return arg_;
 		}
-		double evaluate() const {
-			double value = arg_->evaluate();
+		double evaluate(Scope* s) const {
+			double value = arg_->evaluate(s);
 			if (name_ == "sqrt")
 				return std::sqrt(value);
 			if (name_ == "abs")
 				return value < 0 ? -value : value;
 		}
+
 	private:
 		std::string const name_;
 		Expression const *arg_;
 	};
+	struct Variable : Expression {
+		Variable(std::string const &name) : name_(name) { }
+		
+		std::string const &name() const { return name_; }
+		double evaluate(Scope* s) const {
+			return s->variableValue(name_);
+		}
+	
+	private:
+		std::string const name_;
+	};
+	struct Rational
+	{
+		Rational(int numerator = 0, int denominator = 1);
+		double to_double() const {
+
+		}
+
+		Rational inverse() const {
+			return Rational(_numerator > 0 ? _denominator : -(int)_denominator, (unsigned)_numerator);
+		}
+		Rational operator +() const {
+			// It's not abs() guys, trust me
+			return Rational(_numerator, _denominator);
+		}
+		Rational operator -() const {
+			return Rational(-_numerator, _denominator);
+		}
+		Rational & operator +=(Rational const & rnl) {
+			unsigned sharedD = _lcm(_denominator, rnl._denominator);
+			_numerator = (this->_denominator == sharedD ? _denominator : _denominator * sharedD / rnl._denominator) +
+				(rnl._denominator == sharedD ? rnl._denominator : rnl._denominator * sharedD / _denominator);
+			this->_simplify();
+
+			return *this;
+		}
+		Rational & operator -=(Rational const & rnl) {
+			return *this += -rnl;;
+		}
+		Rational & operator *=(Rational const & rnl) {
+			_numerator *= rnl._numerator;
+			_denominator *= rnl._denominator;
+			this->_simplify();
+
+			return *this;
+		}
+		Rational & operator /=(Rational const & rnl) {
+			*this *= rnl.inverse();
+			return *this;
+		}
+
+	private:
+		int _numerator;
+		unsigned _denominator;
+
+	protected:
+		void _simplify() {
+			while (int devisor = _gcd(_denominator, _numerator) != 1) {
+				_numerator /= devisor;
+				_denominator /= devisor;
+			}
+		}
+		// Greater common divisor
+		int _gcd(int a, int b) { 
+			return b == 0 ? a : _gcd(b, a % b);
+		}
+		// Loweer common multiplier
+		int _lcm(int a, int b) { 
+			return a * b / _gcd(a, b);
+		}
+	};
 	// Some hacky things
-	bool check_equals(Expression const *left, Expression const *right) {
+	bool isEqualType(Expression const *left, Expression const *right) {
 		// check for type equal
 		int vptrLeft = *(int*)left;
 		int vptrRight = *(int*)right;
@@ -300,12 +369,8 @@ namespace Stepic {
 	}
 }
 
-
 void main() {
 	using namespace Stepic;
-	Stepic::String a("hello, ");
-	Stepic::String b("mat");
-	a = b;
 
 	cout << "result is: ";
 	cout << "Press any key to continue...";
