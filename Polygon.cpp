@@ -298,7 +298,11 @@ namespace Stepic {
 	};
 	struct Rational
 	{
-		Rational(int numerator = 0, int denominator = 1);
+		Rational(int numerator = 0, int denominator = 1) {
+			this->_numerator = numerator;
+			this->_denominator = denominator;
+			this->_simplify();
+		}
 		double to_double() const {
 
 		}
@@ -315,14 +319,14 @@ namespace Stepic {
 		}
 		Rational & operator +=(Rational const & rnl) {
 			unsigned sharedD = _lcm(_denominator, rnl._denominator);
-			_numerator = (this->_denominator == sharedD ? _denominator : _denominator * sharedD / rnl._denominator) +
-				(rnl._denominator == sharedD ? rnl._denominator : rnl._denominator * sharedD / _denominator);
+			_numerator = (this->_denominator == sharedD ? _numerator : _numerator * sharedD / _denominator) +
+				(rnl._denominator == sharedD ? rnl._numerator : rnl._numerator * sharedD / rnl._denominator);
 			this->_simplify();
 
 			return *this;
 		}
 		Rational & operator -=(Rational const & rnl) {
-			return *this += -rnl;;
+			return *this += -rnl;
 		}
 		Rational & operator *=(Rational const & rnl) {
 			_numerator *= rnl._numerator;
@@ -335,7 +339,7 @@ namespace Stepic {
 			*this *= rnl.inverse();
 			return *this;
 		}
-
+		
 	private:
 		int _numerator;
 		unsigned _denominator;
@@ -371,7 +375,7 @@ namespace Stepic {
 
 void main() {
 	using namespace Stepic;
-
-	cout << "result is: ";
-	cout << "Press any key to continue...";
+	Rational r(7, 4);
+	r += 4;
+	cout << "result is: ";cout << "Press any key to continue...";
 }
