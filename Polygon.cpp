@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <cassert> 
 #include <algorithm>
 #include <cmath>
@@ -122,7 +122,7 @@ namespace Stepic {
 			for (int i = 0; str.at(i) != '\0'; i++)
 				this->str_[strlen(buf) + i] = str.at(i);
 			str_[strlen(buf) + str.size()] = '\0';
-			
+
 			delete[] buf;
 		}
 	};
@@ -200,18 +200,18 @@ namespace Stepic {
 	struct Expression {
 		virtual ~Expression() {}
 
-		virtual double evaluate(Scope* s) const {}
+		virtual double evaluate(Scope* s) const { return 2; } // it's a plug, forget about it ^)
 	};
 	struct Number : Expression {
 		Number(double value) : value_(value) {}
-	
+
 		double value() const {
 			return value_;
 		}
 		double evaluate(Scope* s) const {
 			return value_;
 		}
-	
+
 	private:
 		double value_;
 	};
@@ -236,17 +236,17 @@ namespace Stepic {
 		double evaluate(Scope* s) const {
 			double left = left_->evaluate(s);
 			double right = right_->evaluate(s);
-	
+
 			switch (op_) {
-				case PLUS: return left + right;
-				case MINUS: return left - right;
-				case DIV: return left / right;
-				case MUL: return left * right;
+			case PLUS: return left + right;
+			case MINUS: return left - right;
+			case DIV: return left / right;
+			case MUL: return left * right;
 			}
 			assert(0);
 			return 0.0;
 		}
-	
+
 	private:
 		enum {
 			PLUS = '+',
@@ -287,24 +287,24 @@ namespace Stepic {
 	};
 	struct Variable : Expression {
 		Variable(std::string const &name) : name_(name) { }
-		
+
 		std::string const &name() const { return name_; }
 		double evaluate(Scope* s) const {
 			return s->variableValue(name_);
 		}
-	
+
 	private:
 		std::string const name_;
 	};
-	struct Rational
-	{
+	class Rational {
+	public:
 		Rational(int numerator = 0, int denominator = 1) {
 			this->_numerator = numerator;
 			this->_denominator = denominator;
 			this->_simplify();
 		}
 		double to_double() const {
-
+			return (double)_numerator * (double)_denominator;
 		}
 
 		Rational inverse() const {
@@ -339,26 +339,156 @@ namespace Stepic {
 			*this *= rnl.inverse();
 			return *this;
 		}
-		
-	private:
+
+	protected:
 		int _numerator;
 		unsigned _denominator;
 
-	protected:
 		void _simplify() {
-			while (int devisor = _gcd(_denominator, _numerator) != 1) {
+			int devisor = _gcd(_denominator, _numerator);
+			do {
 				_numerator /= devisor;
 				_denominator /= devisor;
-			}
+
+				devisor = _gcd(_denominator, _numerator);
+			} while (devisor != 1);
 		}
+
 		// Greater common divisor
-		int _gcd(int a, int b) { 
+		int _gcd(int a, int b) {
 			return b == 0 ? a : _gcd(b, a % b);
 		}
 		// Loweer common multiplier
-		int _lcm(int a, int b) { 
+		int _lcm(int a, int b) {
 			return a * b / _gcd(a, b);
 		}
+	};
+	Rational& operator +(Rational const & a, Rational const & b) {
+		return Rational(a) += b;
+	}
+	Rational& operator -(Rational const & a, Rational const & b) {
+		return Rational(a) -= b;
+	}
+	Rational& operator *(Rational const & a, Rational const & b) {
+		return Rational(a) *= b;
+	}
+	Rational& operator /(Rational const & a, Rational const & b) {
+		return Rational(a) /= b;
+	}
+
+	bool operator ==(Rational const & l, Rational const & r) {
+		return ((l - r).to_double() == 0);
+	}
+	bool operator !=(Rational const & l, Rational const & r) {
+		return !(l == r);
+	}
+	bool operator >(Rational const & l, Rational const & r) {
+		return ((l - r).to_double() > 0);
+	}
+	bool operator <(Rational const & l, Rational const & r) {
+		return (r > l);
+	}
+	bool operator >=(Rational const & l, Rational const & r) {
+		return !(l < r);
+	}
+	bool operator <=(Rational const & l, Rational const & r) {
+		return !(l > r);
+	}
+	class ScopedPtr {
+	public:
+		explicit ScopedPtr(Expression *ptr = 0) {
+			this->ptr_ = ptr;
+		}
+		~ScopedPtr() {
+			delete ptr_;
+		}
+		Expression* get() const {
+			return ptr_;
+		}
+		Expression* release() {
+			Expression* buf = ptr_;
+			ptr_ = 0;
+			return buf;
+		}
+		void reset(Expression *ptr = 0) {
+			this->~ScopedPtr();
+			ptr_ = ptr;
+		}
+		Expression& operator*() const {
+			return *ptr_;
+		}
+		Expression* operator->() const {
+			return ptr_;
+		}
+
+	private:
+		// запрещаем копирование ScopedPtr
+		ScopedPtr(const ScopedPtr&);
+		ScopedPtr& operator=(const ScopedPtr&);
+
+		Expression *ptr_;
+	};
+	class SharedPtr {
+	public:
+		explicit SharedPtr(Expression *ptr = 0) : links_(0) {
+			if (ptr != 0)
+				links_ = new short(1);
+			ptr_ = ptr;
+		}
+		~SharedPtr() {
+			if (ptr_ != 0 && --(*links_) == 0) {
+				delete ptr_;
+				delete links_;
+			}
+		}
+		SharedPtr(const SharedPtr & p) : links_(0) { 
+			ptr_ = p.ptr_;
+			if (p.ptr_ != 0) {
+				this->links_ = p.links_;
+				(*(this->links_))++;
+			} else
+				links_ = 0;
+		}
+		SharedPtr& operator=(const SharedPtr & k) {
+			if (this->ptr_ != k.ptr_) {
+				if (ptr_ != 0 && --(*links_) == 0) {
+					delete ptr_;
+					delete links_;
+				}
+				ptr_ = k.ptr_;
+				if (k.ptr_ != 0) {
+					links_ = k.links_;
+					(*links_)++;
+				} else 
+					links_ = 0;
+			}
+			return *this;
+		}
+		Expression* get() const {
+			return ptr_;
+		}
+		void reset(Expression* ptr = 0) {
+			if (ptr_ != ptr) {
+				if (ptr_ != 0 && --(*links_) == 0) {
+					delete ptr_;
+					delete links_;
+				}
+				ptr_ = ptr;
+				if (ptr != 0)
+					this->links_ = new short(1);
+				else
+					links_ = 0;
+			}
+		}
+		Expression& operator*() const {
+			return *ptr_;
+		}
+		Expression* operator->() const {
+			return ptr_;
+		}
+	private: 
+		short* links_;
+		Expression* ptr_;
 	};
 	// Some hacky things
 	bool isEqualType(Expression const *left, Expression const *right) {
@@ -370,12 +500,19 @@ namespace Stepic {
 			return true;
 		else
 			return false;
-	}
+	}	
 }
 
 void main() {
 	using namespace Stepic;
-	Rational r(7, 4);
-	r += 4;
+	int i = 0;
+	while (i++ != 4) {
+		SharedPtr shared(new Variable("x"));
+		SharedPtr shared2(shared);
+		SharedPtr shared3(new Variable("y"));
+		SharedPtr shared5 = shared2;
+		shared3.reset(shared.get());
+	}
+
 	cout << "result is: ";cout << "Press any key to continue...";
 }
