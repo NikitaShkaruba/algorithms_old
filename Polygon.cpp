@@ -490,6 +490,80 @@ namespace Stepic {
 		short* links_;
 		Expression* ptr_;
 	};
+	// templates
+	template <typename T> class Array {
+	public:
+		Array(size_t size, const T& value = T()) {
+			size_ = size;
+			arr_ = (T*)(new char[size_ * sizeof(T)]);
+			for (int i = 0; i < size_; i++)
+				new (arr_ + i) T(value);
+		}
+		Array(const Array & arr) {
+			size_ = arr.size_;
+			arr_ = (T*)(new char[size_ * sizeof(T)]);
+			for (int i = 0; i < size_; i++)
+				new (arr_ + i) T(arr.arr_[i]);
+		}
+		~Array() {
+			for (int i = 0; i < size_; i++)
+				arr_[i].~T();
+			delete[](char*)arr_;
+		}
+		Array& operator=(const Array arr) {
+			if (arr_ != arr.arr_) {
+				for (int i = 0; i < size_; i++)
+					arr_[i].~T();
+				delete[](char*)arr_;
+
+				size_ = arr.size_;
+				arr_ = (T*)(new char[size_ * sizeof(T)]);
+				for (int i = 0; i < size_; i++)
+					new (arr_ + i) T(arr[i]);
+			}
+		}
+		
+		size_t size() const {
+			return size_;
+		}
+		T& operator[](size_t index) {
+			return arr_[index];
+		}
+		const T& operator[](size_t index) const {
+			return arr_[index];
+		}
+	private:
+		T* arr_;
+		size_t size_;
+	};
+	struct ICloneable {
+		virtual ICloneable* clone() const = 0;
+		virtual ~ICloneable() { }
+	};
+	
+	template <typename T> 
+	struct ValueHolder : ICloneable {
+	public:
+		ValueHolder(T data) :data_(data)  { }
+		ICloneable* clone() const {
+			return new ValueHolder(*this);
+		}
+		T data_;
+	};
+	
+	template<typename U, typename T> 
+	copy_n(U* in, T* out, int count) {
+		for (int i = 0; i < count; i++) {
+			out[i] = (T)in[i];
+		}
+	}
+	
+	template<typename U, typename T> 
+	void copy_n(U* out, T* in, int count) {
+		for (int i = 0; i < count; i++) {
+			out[i] = (U)in[i];
+		}
+	}
 	// Some hacky things
 	bool isEqualType(Expression const *left, Expression const *right) {
 		// check for type equal
@@ -505,14 +579,6 @@ namespace Stepic {
 
 void main() {
 	using namespace Stepic;
-	int i = 0;
-	while (i++ != 4) {
-		SharedPtr shared(new Variable("x"));
-		SharedPtr shared2(shared);
-		SharedPtr shared3(new Variable("y"));
-		SharedPtr shared5 = shared2;
-		shared3.reset(shared.get());
-	}
 
-	cout << "result is: ";cout << "Press any key to continue...";
+	cout << "result is: " << "Press any key to continue...";
 }
