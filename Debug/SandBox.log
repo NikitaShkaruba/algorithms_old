@@ -1,4 +1,4 @@
-﻿Build started 7/5/2015 7:15:20 PM.
+﻿Build started 7/6/2015 6:26:03 PM.
      1>Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Polygon.cpp
@@ -8,9 +8,33 @@
      1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(48): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(49): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(69): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(555): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-     1>Done Building Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)) -- FAILED.
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(499): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(496) : while compiling class template member function 'Stepic::Array<int>::Array(size_t,const T &)'
+                 with
+                 [
+                     T=int
+                 ]
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(658) : see reference to function template instantiation 'Stepic::Array<int>::Array(size_t,const T &)' being compiled
+                 with
+                 [
+                     T=int
+                 ]
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(658) : see reference to class template instantiation 'Stepic::Array<int>' being compiled
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(509): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(508) : while compiling class template member function 'Stepic::Array<int>::~Array(void)'
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(658) : see reference to function template instantiation 'Stepic::Array<int>::~Array(void)' being compiled
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(505): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(502) : while compiling class template member function 'Stepic::Array<int>::Array(const Stepic::Array<int> &)'
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(500) : see reference to function template instantiation 'Stepic::Array<int>::Array(const Stepic::Array<int> &)' being compiled
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(570): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(661) : see reference to function template instantiation 'void Stepic::flatten<int>(const Stepic::Array<int> &,std::ostream &)' being compiled
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(575): warning C4018: '<' : signed/unsigned mismatch
+                 c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\polygon.cpp(663) : see reference to function template instantiation 'void Stepic::flatten<int>(const Stepic::Array<Stepic::Array<int>> &,std::ostream &)' being compiled
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.lib" /MACHINE:X86 Debug\Polygon.obj
+         SandBox.vcxproj -> C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.exe
+     1>Done Building Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:00.56
+Time Elapsed 00:00:01.19

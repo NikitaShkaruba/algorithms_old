@@ -1,6 +1,6 @@
-﻿#include <iostream>
+﻿#include <algorithm>
+#include <iostream>
 #include <cassert> 
-#include <algorithm>
 #include <cmath>
 using namespace std;
 
@@ -491,7 +491,8 @@ namespace Stepic {
 		Expression* ptr_;
 	};
 	// templates
-	template <typename T> class Array {
+	template <typename T> 
+	class Array {
 	public:
 		Array(size_t size, const T& value = T()) {
 			size_ = size;
@@ -536,6 +537,22 @@ namespace Stepic {
 		T* arr_;
 		size_t size_;
 	};
+	template <typename T>
+	class Array < T* > {
+	public:
+		explicit Array(size_t size) : size_(size), data_(new T*[size]) {
+		
+		}
+		
+		T& operator[](size_t i) {
+			return *data_[i];
+		}
+
+	private:
+		size_t size_;
+		T** data_;
+	};
+
 	struct ICloneable {
 		virtual ICloneable* clone() const = 0;
 		virtual ~ICloneable() { }
@@ -543,26 +560,129 @@ namespace Stepic {
 	
 	template <typename T> 
 	struct ValueHolder : ICloneable {
-	public:
 		ValueHolder(T data) :data_(data)  { }
 		ICloneable* clone() const {
 			return new ValueHolder(*this);
 		}
 		T data_;
 	};
-	
-	template<typename U, typename T> 
-	copy_n(U* in, T* out, int count) {
-		for (int i = 0; i < count; i++) {
-			out[i] = (T)in[i];
+	class Any {
+	public:
+		// В классе Any должен быть конструктор,
+		// который можно вызвать без параметров,
+		// чтобы работал следующий код:
+		//    Any empty; // empty ничего не хранит
+		Any() {
+			holder_ = 0;
 		}
-	}
-	
+
+		// В классе Any должен быть шаблонный
+		// конструктор от одного параметра, чтобы
+		// можно было создавать объекты типа Any,
+		// например, следующим образом:
+		//    Any i(10); // i хранит значение 10
+		template<typename T> Any(T obj) {
+			holder_ = new ValueHolder<T>(obj);
+		}
+
+		// Не забудьте про деструктор. Все выделенные
+		// ресурсы нужно освободить.
+		~Any() {
+			delete holder_;
+		}
+
+		// В классе Any также должен быть конструктор
+		// копирования (вам поможет метод clone
+		// интерфейса ICloneable)
+		Any(const Any& other) {
+			holder_ = other.holder_->clone();
+		}
+
+		// В классе должен быть оператор присваивания и/или
+		// шаблонный оператор присваивания, чтобы работал
+		// следующий код:
+		//    Any copy(i); // copy хранит 10, как и i
+		//    empty = copy; // empty хранит 10, как и copy
+		//    empty = 0; // а теперь empty хранит 0
+		Any& operator=(const Any& other) {
+			if (this != &other)
+				holder_ = other.holder_->clone();
+			return *this;
+		}
+
+		// Ну и наконец, мы хотим уметь получать хранимое
+		// значение, для этого определите в классе Any
+		// шаблонный метод cast, который возвращает
+		// указатель на хранимое значение, или нулевой
+		// указатель в случае несоответствия типов или
+		// если объект Any ничего не хранит:
+		//    int *iptr = i.cast<int>(); // *iptr == 10
+		//    char *cptr = i.cast<char>(); // cptr == 0,
+		//        // потому что i хранит int, а не char
+		//    Any empty2;
+		//    int *p = empty2.cast<int>(); // p == 0
+		// При реализации используйте dynamic_cast,
+		// который мы уже обсуждали ранее.
+		template<typename T> T* cast() {
+			return holder_ == 0 ? 0 : (dynamic_cast<ValueHolder<T>*>holder_)->data_);
+		}
+
+	private:
+		ICloneable* holder_;
+	};
+
 	template<typename U, typename T> 
 	void copy_n(U* out, T* in, int count) {
 		for (int i = 0; i < count; i++) {
 			out[i] = (U)in[i];
 		}
+	}
+	template<typename T, typename Comparer>
+	T minimum(Array<T> arr, Comparer compare) {
+		T min = arr[0];
+		for (int i = 1; i < arr.size(); i++)
+			if (compare(arr[i], min))
+				min = arr[i];
+		return min;
+	}
+
+	// template overrides
+	template <typename T>
+	void flatten(const Array<T>& arr, std::ostream& out) {
+		for (int i = 0; i < arr.size(); i++)
+			out << arr[i] << " ";
+	}
+	template <typename T>
+	void flatten(const Array< Array<T> >& arr, std::ostream& out) {
+		for (int i = 0; i < arr.size(); i++)
+			flatten(arr[i], out);
+	}
+
+	template<typename T, typename U>
+	struct SameType {
+		static const bool value = false;
+	};
+	template<typename T>
+	struct SameType<T, T> {
+		static const bool value = true;
+	};
+
+	
+	// реализуйте шаблонную функцию array_size,
+	// которая возвращает значение типа size_t.
+	template<typename T, size_t N>
+	size_t array_size(T(&arr)[N]) {
+		return N;
+	}
+	
+	//templated template
+	string toString(int i);
+	template<template <class> class Container>
+	Container<string> toStrings(Container<int> const& c) {
+		Container<string> result(c.size());
+		for (size_t i = 0; i !- ar.size(); i++)
+			result.get(i) = toString(c.get(i));
+		return result;
 	}
 	// Some hacky things
 	bool isEqualType(Expression const *left, Expression const *right) {
@@ -579,6 +699,13 @@ namespace Stepic {
 
 void main() {
 	using namespace Stepic;
+	
+	Array<int> ints(2, 0);
+	ints[0] = 10;
+	ints[1] = 20;
+	flatten(ints, std::cout); // выводит на экран строку "10 20"
+	Array<Array<int>> array_of_ints(2, ints);
+	flatten(array_of_ints, std::cout); // выводит на экран строку "10 20 10 20"
 
 	cout << "result is: " << "Press any key to continue...";
 }
