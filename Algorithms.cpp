@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
+#include <time.h>
+#include <vector>
 
 namespace algo {
 	// some useful common stuff
@@ -11,7 +13,6 @@ namespace algo {
 		a = b;
 		b = buf;
 	}
-	
 	template<typename T> T* getSubArray(T* arr, size_t count) {
 	// Complexity: O(1)
 	// coz T(n) = O(count) = O(1)
@@ -24,7 +25,7 @@ namespace algo {
 	}
 
 	// Divide and Conquer paradigm
-	int* SelectionSort(int* arr, size_t size) {
+	void SelectionSort(int* arr, size_t size) {
 	// Complexity: O(n^2)
 
 		for (size_t i = 0; i < size; i++) {		// n*
@@ -37,10 +38,9 @@ namespace algo {
 
 			// put into beginning
 			swap(*min, arr[i]);
-		} 
-		return arr;
+		}
 	}
-	int* InsertionSort(int* arr, size_t size) {
+	void InsertionSort(int* arr, size_t size) {
 	// Complexity: O(n^2)
 
 		for (size_t i = 1; i < size; i++) {			// n*
@@ -53,9 +53,8 @@ namespace algo {
 
 			arr[j + 1] = key;
 		}
-		return arr;
 	}
-	int* BubbleSort(int* arr, size_t size) {
+	void BubbleSort(int* arr, size_t size) {
 	// Complexity: O(n^2)
 
 		for (size_t i = 0; i < size; i++) {				// n*
@@ -64,38 +63,46 @@ namespace algo {
 				if (arr[j] > arr[j + 1])
 					swap(arr[j], arr[j + 1]);
 		}
-		return arr;
 	}
-	
-	int* merge(int* left, size_t leftSize, int* right, size_t rightSize) {
-	// Complexity: O(n)
-	// coz T(8*(rightSize + leftSize) + 3) = T(8*n + 3) = O(n) 
-
-		int i = 0, j = 0;
-		int* result = new int[leftSize + rightSize];
-
-		for (size_t k = 0; k < leftSize + rightSize; k++) {
-			if ((i != leftSize && j != rightSize) != 0)
-				result[k] = left[i] < right[j] ? left[i++] : right[j++];
-			else
-				result[k] = (i != leftSize) ? left[i++] : right[j++];
-		}
-
-		delete left;
-		delete right;
-		return result;
-	}
-	int* MergeSort(int* arr, size_t size) {
+	void MergeSort(int* arr, size_t size) {
 	// Complexity O(n*log(n)) 
 	// coz T(n) = 3 + 2*T(n/2) + n = T(n*log(n) + n) = O(n*log(n))
 	// notice: recursion depth is log<2>(n)
 		if (size == 1)
-			return arr;
-		
-		int* left = MergeSort(getSubArray(arr, size / 2), size/2);									// T(n/2)*
-		int* right = MergeSort(getSubArray(arr + size / 2, size - size/2), size - size / 2);		// T(n/2)*
-		
-		return merge(left, size/2, right, size - size/2);											// n*
+			return;
+
+		MergeSort(arr, size/2);						// T(n/2)*
+		MergeSort(arr + size/2, size - size/2);		// T(n/2)*
+
+		int l = 0, r = size/2;	// left and right indexes respectivelly
+		int* buf = getSubArray(arr, size);
+
+		for (size_t i = 0; i < size; i++) {			// O(n)
+			if (l != size/2 && r != size)
+				arr[i] = buf[l] < buf[r] ? buf[l++] : buf[r++];
+			else
+				arr[i] = (l != size/2) ? buf[l++] : buf[r++];
+		}
+		delete[] buf;
+	}
+	void QuickSort(int* arr, size_t size) {
+		if (size <= 1)
+			return;
+
+		srand(time(0));
+		int key = rand() % size, l = 0, r = size - 1;
+		int* buf = getSubArray(arr, size);
+		for (size_t i = 0; i < size; i++) {
+			if (buf[i] > buf[key])
+				arr[r--] = buf[i];
+			if (buf[i] < buf[key])
+				arr[l++] = buf[i];
+		}
+		arr[l] = buf[key];
+		delete buf;
+
+		QuickSort(arr, l);
+		QuickSort(arr + l + 1, size - l - 1);
 	}
 
 	int* invMerge(int* left, size_t leftSize, int* right, size_t rightSize, size_t& counter) { 
@@ -218,67 +225,5 @@ namespace algo {
 			}
 		}
 		return NULL;
-	}
-	
-	// Shtrassen :\
-	//template<size_t n>
-	//int* getSubMatrix(int m[n][n], int whereTo) {
-	//	// 1, 2, 3, 4 left to right, top to bottom
-	//	int* result = new int[n / 2][n / 2];
-	//	int i, j;
-	//	switch (whereTo) {
-	//	case 1: {
-	//		for (size_t i = 0; i <= n / 2; i++)
-	//			for (size_t j = 0; j <= n / 2; j++)
-	//				result[i][j] = m[i][j];
-	//		break;
-	//	}
-	//	case 2: {
-	//		for (size_t i = n / 2; i <= n; i++)
-	//			for (size_t j = 0; j <= n / 2; j++)
-	//				result[i - n / 2][j] = m[i][j];
-	//		break;
-	//	}
-	//	case 3: {
-	//		for (size_t i = 0; i <= n / 2; i++)
-	//			for (size_t j = n / 2; j <= n; j++)
-	//				result[i][j - n / 2] = m[i][j];
-	//		break;
-	//	}
-	//	case 4: {
-	//		for (size_t i = n / 2; i <= n; i++)
-	//			for (size_t j = n / 2; j <= n; j++)
-	//				result[i - n / 2][j - n / 2] = m[i][j];
-	//		break;
-	//	}
-	//	default: throw 0;
-	//	}
-	//	return result;
-	//}
-	//template<size_t n, size_t m, sze_t k>
-	//int* Shtrassen(int left[n][m],  right[m][k]) {
-	//	
-	//} 
-	//template<size_t n>
-	//int* Strassen(int left[n][n], right[n][n]) {
-	//	if (n <= 6)
-	//		return *(left * right);
-	//	
-	//	int* A = getSubMatrix(left, 1);
-	//	int* B = getSubMatrix(left, 2);
-	//	int* C = getSubMatrix(left, 3);
-	//	int* D = getSubMatrix(left, 4);
-	//	int* E = getSubMatrix(right, 1);
-	//	int* F = getSubMatrix(right, 2);
-	//	int* G = getSubMatrix(right, 3);
-	//	int* H = getSubMatrix(right, 4);
-	//
-	//	int* p1 = A * (F - H); 
-	//	int* p2 = H * (A + B);
-	//	int* p3 = E * (C + D);
-	//	int* p4 = D * (G - E);
-	//	int* p5 = (A + D) * (E + H);
-	//	int* p6 = (B - D) * (G + H);
-	//	int* p7 = (A - C) * (E + F);
-	//}	
+	}	
 }

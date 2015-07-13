@@ -8,15 +8,15 @@ using namespace algo;
 
 namespace polygon {
 	int* GenerateRandomArray(size_t size) {
-		srand(time(0));
-
 		int* arr = new int[size];
+		
 		for (size_t i = 0; i < size; i++)
 			arr[i] = rand();
 
 		return arr;
 	}
 	void printArray(int* arr, size_t size) {
+		std::cout << "Array:" << std::endl;
 		for (size_t i = 0; i < size; i++)
 			std::cout << i << ") " << arr[i] << std::endl;
 	}
@@ -28,16 +28,18 @@ namespace polygon {
 	}
 
 	void RunSortTests() {
-		int* (*sorts[])(int*, size_t) = { SelectionSort, InsertionSort, BubbleSort, MergeSort };
-		size_t elementsCount = 512;
+		void (*sorts[])(int*, size_t) = { SelectionSort, InsertionSort, BubbleSort, MergeSort, QuickSort };
+		size_t elementsCount = 10;
 		
-		for (size_t i = 0; i < 4; i++) {
-			int* arr = GenerateRandomArray(elementsCount);
+		for (size_t i = 0; i < 5; i++) {
+			for (int j = 0; j < 50; j++) {
+				int* arr = GenerateRandomArray(elementsCount);
 
-			arr = sorts[i](arr, elementsCount);
-			assert(isSorted(arr, elementsCount));
+				sorts[i](arr, elementsCount);
+				assert(isSorted(arr, elementsCount));
 
-			delete[] arr;
+				delete[] arr;
+			}
 		}
 	}
 	void RunCountInversionsTest() {
