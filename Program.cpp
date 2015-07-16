@@ -1,4 +1,5 @@
 ﻿#include "Algorithms.h"
+#include "DataStructures.h"
 #include <iostream>
 #include "Tests.h"
 #include <fstream>

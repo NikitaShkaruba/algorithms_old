@@ -89,22 +89,20 @@ namespace algo {
 		if (size <= 1)
 			return;
 
-		srand(time(0));
-		int key = rand() % size, l = 0, r = size - 1;
-		int* buf = getSubArray(arr, size);
-		for (size_t i = 0; i < size; i++) {
-			if (buf[i] > buf[key])
-				arr[r--] = buf[i];
-			if (buf[i] < buf[key])
-				arr[l++] = buf[i];
+		// amazing not naive partition implementation
+		int key = rand() % size, i = 1; // i is the pivot element 
+		swap(arr[0], arr[key]);			// j points on unsorted element
+		for (size_t j = 1; j < size; j++) {
+			if (arr[j] < arr[0])
+				swap(arr[i++], arr[j]);
 		}
-		arr[l] = buf[key];
-		delete buf;
+		swap(arr[0], arr[i-1]);
 
-		QuickSort(arr, l);
-		QuickSort(arr + l + 1, size - l - 1);
+		QuickSort(arr, i-1);
+		QuickSort(arr + i, size - i);
 	}
 
+	// optimize this later
 	int* invMerge(int* left, size_t leftSize, int* right, size_t rightSize, size_t& counter) { 
 	// Complexity: O(n) 
 	// coz: T(n) = O(leftSize + rightSize) = O(n)
@@ -225,5 +223,5 @@ namespace algo {
 			}
 		}
 		return NULL;
-	}	
+	}
 }
