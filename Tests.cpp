@@ -1,4 +1,5 @@
 #include "Algorithms.h"
+#include "DataStructures.cpp"
 #include <iostream>
 #include <cassert> 
 #include <time.h>
@@ -9,7 +10,7 @@ using namespace algo;
 namespace polygon {
 	int* GenerateRandomArray(size_t size) {
 		int* arr = new int[size];
-		
+
 		for (size_t i = 0; i < size; i++)
 			arr[i] = rand();
 
@@ -28,9 +29,9 @@ namespace polygon {
 	}
 
 	void RunSortTests() {
-		void (*sorts[])(int*, size_t) = { SelectionSort, InsertionSort, BubbleSort, MergeSort, QuickSort };
+		void(*sorts[])(int*, size_t) = { SelectionSort, InsertionSort, BubbleSort, MergeSort, QuickSort };
 		size_t elementsCount = 10;
-		
+
 		for (size_t i = 0; i < 5; i++) {
 			for (int j = 0; j < 50; j++) {
 				int* arr = GenerateRandomArray(elementsCount);
@@ -42,7 +43,7 @@ namespace polygon {
 			}
 		}
 	}
-	void RunCountInversionsTest() {
+	void RunCountInversionsTests() {
 		int arr[] { 1, 2, 3, 4, 5 };
 		assert(CountInversions(arr, 5) == 0);
 
@@ -58,5 +59,18 @@ namespace polygon {
 		// Stanford homework #1
 		assert(CountInversions(integers, 100000) == 2407905288);
 		delete integers;
+	}
+	void RunRedBlackTreeTests() {
+		for (size_t i = 0; i < 11; i++) {
+			size_t size = 7 + i;
+			int* arr = new int[pow(2, size)];
+			for (size_t j = 0; j < size; j++)
+				arr[j] = rand();
+			RedBlackTree tree(arr, size);
+			
+			tree.inTraversal([](RedBlackTree* node) {
+				assert(node->isBinaryTree());
+			});
+		}
 	}
 }
