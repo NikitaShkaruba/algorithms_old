@@ -1,21 +1,29 @@
-﻿Build started 7/21/2015 7:16:23 PM.
-     1>Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
+﻿Build started 7/23/2015 2:14:23 AM.
+     1>Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Program.cpp Tests.cpp
-         Tests.cpp
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\tests.cpp(66): warning C4244: 'initializing' : conversion from 'double' to 'unsigned int', possible loss of data
-         Program.cpp
-         Generating Code...
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(81): warning C4715: 'algo::RedBlackTree::isBinaryTree' : not all control paths return a value
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Algorithms.cpp
+         Algorithms.cpp
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(116): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(118): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(150): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(152): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(214): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(224): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(224): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(227): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(228): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(228): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(122): warning C4715: 'algo::RSelect': not all control paths return a value
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(156): warning C4715: 'algo::DSelect': not all control paths return a value
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.lib" /MACHINE:X86 Debug\Algorithms.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.lib" /MACHINE:X86 Debug\Algorithms.obj
          Debug\DataStructures.obj
          Debug\Program.obj
          Debug\Stepic.obj
          Debug\Tests.obj
-         SandBox.vcxproj -> C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Debug\SandBox.exe
-     1>Done Building Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)).
+         SandBox.vcxproj -> C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.exe
+     1>Done Building Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.72
+Time Elapsed 00:00:02.23

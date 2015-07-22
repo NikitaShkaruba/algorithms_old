@@ -30,7 +30,7 @@ namespace algo {
 			}
 		}
 		void remove(int value)  { }
-		virtual bool contains(int value) {
+		bool contains(int value) {
 			if (key_ < value && left_)
 				return left_->contains(value);
 			if (key_ > value && right_)
@@ -98,7 +98,7 @@ namespace algo {
 						RedBlackTree* lastOne = this;
 
 						if (this->isRight() && this->parent_->isLeft()) {
-							this->leftRotate(); 
+							this->leftRotate();
 							lastOne = this->left_;
 						}
 						else if (this->isLeft() && this->parent_->isRight()) {
@@ -199,11 +199,57 @@ namespace algo {
 		}
 		RedBlackTree* getUncle() {
 			RedBlackTree* grandPa = getGrandpa();
-			return(grandPa)? ((this->parent_->isLeft()) ? grandPa->right_ : grandPa->left_) : nullptr;
+			return(grandPa) ? ((this->parent_->isLeft()) ? grandPa->right_ : grandPa->left_) : nullptr;
 		}
 
 		RedBlackTree *parent_, *left_, *right_;
 		bool color_;
 		int key_;
+	};
+	class AVLTree {
+	public:
+		AVLTree(int key) : left_(0), right_(0), bFactor_(0), key_(key) {}
+		AVLTree(int* arr, size_t size) : AVLTree(arr[0]) {
+			for (size_t i = 0; i < size; i++) {
+								
+			}
+		}
+
+		void insert() {
+
+		}
+		void remove() {
+
+		}
+		bool contains(int value) {
+			if (key_ < value && left_)
+				return left_->contains(value);
+			if (key_ > value && right_)
+				return right_->contains(value);
+
+			if (key_ == value)
+				return true;
+			return false;
+		}
+	
+	private:
+		void SmallLeftRotate() {
+			
+		}
+		void SmallRightRotate() {
+			AVLTree* child = this->left_;
+		};
+		void BigLeftRotate();
+		void BigRightRotate();
+
+		void GrowLeft(AVLTree* node) {
+			
+		}
+		void GrowRight(AVLTree* node) {
+				
+		}
+
+		AVLTree *left_, *right_;
+		int bFactor_, key_;
 	};
 }

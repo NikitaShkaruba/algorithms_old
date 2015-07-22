@@ -24,10 +24,9 @@ namespace algo {
 		return result;
 	}
 
-	// Divide and Conquer paradigm
+	// Sorts
 	void SelectionSort(int* arr, size_t size) {
-	// Complexity: O(n^2)
-
+		// Complexity: O(n^2)
 		for (size_t i = 0; i < size; i++) {		// n*
 			int* min = &arr[i];
 
@@ -41,8 +40,7 @@ namespace algo {
 		}
 	}
 	void InsertionSort(int* arr, size_t size) {
-	// Complexity: O(n^2)
-
+		// Complexity: O(n^2)
 		for (size_t i = 1; i < size; i++) {			// n*
 			int key = arr[i];
 
@@ -55,8 +53,7 @@ namespace algo {
 		}
 	}
 	void BubbleSort(int* arr, size_t size) {
-	// Complexity: O(n^2)
-
+		// Complexity: O(n^2)
 		for (size_t i = 0; i < size; i++) {				// n*
 			//get rid of a big one
 			for (size_t j = 0; j < size - i - 1; j++)	// n*
@@ -65,16 +62,14 @@ namespace algo {
 		}
 	}
 	void MergeSort(int* arr, size_t size) {
-	// Complexity O(n*log(n)) 
-	// coz T(n) = 3 + 2*T(n/2) + n = T(n*log(n) + n) = O(n*log(n))
-	// notice: recursion depth is log<2>(n)
+		// Complexity O(n*log(n)) 
 		if (size == 1)
 			return;
 
-		MergeSort(arr, size/2);						// T(n/2)*
-		MergeSort(arr + size/2, size - size/2);		// T(n/2)*
+		MergeSort(arr, size/2);				
+		MergeSort(arr + size/2, size - size/2);
 
-		int l = 0, r = size/2;	// left and right indexes respectivelly
+		int l = 0, r = size/2;	// left and right indexes respectively
 		int* buf = getSubArray(arr, size);
 
 		for (size_t i = 0; i < size; i++) {			// O(n)
@@ -86,13 +81,14 @@ namespace algo {
 		delete[] buf;
 	}
 	void QuickSort(int* arr, size_t size) {
+		// Complexity T(n) = O(n*log(n))
 		if (size <= 1)
 			return;
 
 		// amazing not naive partition implementation
-		int key = rand() % size, i = 1; // i is the pivot element 
-		swap(arr[0], arr[key]);			// j points on unsorted element
-		for (size_t j = 1; j < size; j++) {
+		int key = rand() % size, i = 1; // i points on pivot element 
+		swap(arr[0], arr[key]);			
+		for (size_t j = 1; j < size; j++) { // j points on unsorted element
 			if (arr[j] < arr[0])
 				swap(arr[i++], arr[j]);
 		}
@@ -102,7 +98,64 @@ namespace algo {
 		QuickSort(arr + i, size - i);
 	}
 
-	// optimize this later
+	// Selection problem
+	int& RSelect(int* arr, size_t size, size_t k) {
+		// Complexity O(n) 
+		// It's a little messy to write it in c++, so give here only COPIES of the array real
+		if (size == 1)
+			return arr[0];
+
+		int key = rand() % size, i = 1; // i points on pivot element 
+		swap(arr[0], arr[key]);			
+		for (size_t j = 1; j < size; j++) { // j points on unsorted element
+			if (arr[j] < arr[0])
+				swap(arr[i++], arr[j]);
+		}
+		swap(arr[0], arr[i-1]);
+
+		if (k < i)
+			return RSelect(arr, i-1, k);  
+		if (k > i)
+			return RSelect(arr + i, size - i, k - i);
+		if (i == k)
+			return arr[i];
+	}
+	int& DSelect(int* arr, size_t size, size_t k) {
+		// Complexity O(n) 
+		// It's a little messy to write it in c++, so give here only COPIES of the array real
+		if (size == 1)
+			return arr[0];
+		
+		int* buf = new int[size];
+		int* medians = new int[size/5];
+		for(size_t i = 0; i < size; size++) {
+			buf[i] = arr[i];
+			if (i % 5 == 0) {
+				MergeSort(arr + i, 5);
+				medians[i/5] = arr[i + 2];
+			}
+		}
+		int key = DSelect(medians, size/5, size/10);
+		delete buf;
+		delete medians;
+		int i = 1; // i points on pivot element 
+		
+		swap(arr[0], arr[key]);			
+		for (size_t j = 1; j < size; j++) { // j points on unsorted element
+			if (arr[j] < arr[0])
+				swap(arr[i++], arr[j]);
+		}
+		swap(arr[0], arr[i-1]);
+
+		if (k < i)
+			return RSelect(arr, i-1, k);  
+		if (k > i)
+			return RSelect(arr + i, size - i, k - i);
+		if (i == k)
+			return arr[i];
+	}
+	
+	// Count Inversions problem
 	int* invMerge(int* left, size_t leftSize, int* right, size_t rightSize, size_t& counter) { 
 	// Complexity: O(n) 
 	// coz: T(n) = O(leftSize + rightSize) = O(n)
@@ -144,7 +197,7 @@ namespace algo {
 		return invMerge(left, leftSize, right, rightSize, counter);										//n
 	}
 	unsigned long CountInversions(int * arr, size_t size) {
-	// Just nahdy enter point for user. Look up inside CountInversionsSort(...) which place is down below
+	// Just handy enter point for user. Look up inside CountInversionsSort(...) which place is down below
 		size_t counter = 0;
 		int* buffer = new int[size];
 		std::copy(arr, &arr[size], buffer);
@@ -155,7 +208,7 @@ namespace algo {
 		return counter;
 	}
 	
-	// optimize this later ^)
+	// Get closest pair problem
 	typedef std::pair<int, int> point;
 	int getDistance(point left, point right) {
 		return std::abs(std::sqrt(std::pow(left.first, 2) + std::pow(left.second, 2)) - std::sqrt(std::pow(right.first, 2) + std::pow(right.second, 2)));
@@ -181,12 +234,6 @@ namespace algo {
 		return bestPair;
 		// linear comparison
 	}
-	bool xComparator(point a, point b) {
-		return (a.first < b.first);
-	}
-	bool yComparator(point a, point b) {
-		return (a.second < b.second);
-	}
 	point* GetClosestPair(point xSorted[], point ySorted[], size_t size) {
 		if (size <= 2)
 			return xSorted;
@@ -210,8 +257,8 @@ namespace algo {
 		point* Y = new point[size];
 		std::copy(arr, &arr[size], Y);
 
-		std::sort(X, &X[size], xComparator);
-		std::sort(Y, &Y[size], yComparator);
+		std::sort(X, &X[size], [](point a, point b) { return a.first < b.first; });
+		std::sort(Y, &Y[size], [](point a, point b) { return a.second < b.second; });
 
 		point* result = GetClosestPair(X, Y, size);
 		for (size_t i = 0; i < size; i++) {
@@ -222,6 +269,6 @@ namespace algo {
 				return &arr[i];
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 }
