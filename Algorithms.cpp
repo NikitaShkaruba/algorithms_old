@@ -1,4 +1,5 @@
 #include "Algorithms.h"
+#include "DataStructures.cpp"
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
@@ -22,6 +23,13 @@ namespace algo {
 			result[i] = arr[i];
 
 		return result;
+	}
+	int& getMax(int* arr, size_t size) {
+		int max = arr[0];
+		for (int i = 1; i < size; i++)
+			if (arr[i] > max)
+				max = arr[i];
+		return max;
 	}
 
 	// Sorts
@@ -96,6 +104,54 @@ namespace algo {
 
 		QuickSort(arr, i-1);
 		QuickSort(arr + i, size - i);
+	}
+	void HeapSort(int* arr, size_t size) {
+		Heap heap(arr, size);
+		for(size_t i = 0; i < size; i++)
+			arr[i] = heap.pop();
+	}
+	void BucketSort(int* arr, size_t size) {
+		int max = getMax(arr, size);
+		List<int>* buckets = new List<int>[(int)log10(max)];
+		
+		for(size_t i = 0; i < size; i++)
+			buckets[(int)log10(arr[i])].insert(arr[i]);
+		for(size_t i = 0; i < (int)log10(max); i++) {
+			MergeSort(buckets[i].getArray(), buckets[i].getSize());
+			for(size_t j = 0; j < buckets[i].getSize(); j++)
+				arr[i] = buckets[i][j];
+		}
+	}
+	void CountingSort(int* arr, size_t size) {
+		int* count = new int[sizeof(int)];
+		for(size_t i = 0; i < size; i++)
+			count[arr[i]]++;
+
+		for(size_t i = 0, j = 0; j < size; i++) {
+			if (count[i] != 0) {
+				arr[j++] = i;
+				count[i]--;
+			}
+		}
+	}
+	void RadixSort(int* arr, size_t size) {
+		int max = getMax(arr, size);
+		int* output = new int[size];
+		for (size_t exp = 0; max/exp > 0; exp *= 10) {
+			int i, count[10] = {0};
+			for (i = 0; i < size; i++)
+				count[(arr[i] / exp) % 10]++;
+			for (i = 1; i < 10; i++)
+				count[i] += count[i - 1];
+			
+			for (i = size - 1; i >= 0; i--) {
+				output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+				count[(arr[i] / exp) % 10]--;
+			}
+			for (i = 0; i < size; i++)
+				arr[i] = output[i];
+		}
+		delete output;
 	}
 
 	// Selection problem

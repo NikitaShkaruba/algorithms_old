@@ -1,29 +1,30 @@
-﻿Build started 7/23/2015 2:14:23 AM.
+﻿Build started 7/24/2015 10:42:39 PM.
      1>Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Algorithms.cpp
          Algorithms.cpp
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(116): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(118): warning C4018: '>': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(150): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(152): warning C4018: '>': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(214): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(224): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(224): warning C4804: '<': unsafe use of type 'bool' in operation
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(227): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(228): warning C4804: '<': unsafe use of type 'bool' in operation
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(228): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(122): warning C4715: 'algo::RSelect': not all control paths return a value
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(156): warning C4715: 'algo::DSelect': not all control paths return a value
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.lib" /MACHINE:X86 Debug\Algorithms.obj
-         Debug\DataStructures.obj
-         Debug\Program.obj
-         Debug\Stepic.obj
-         Debug\Tests.obj
-         SandBox.vcxproj -> C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\Debug\SandBox.exe
-     1>Done Building Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)).
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(29): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(132): error C2148: total size of array must not exceed 0x7fffffff bytes
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(135): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(141): error C2440: '=': cannot convert from 'int' to 'int *'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(141): note: Conversion from integral type to pointer type requires reinterpret_cast, C-style cast or function-style cast
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(144): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(145): error C2440: '=': cannot convert from 'int *' to 'int'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(145): note: There is no context in which this conversion is possible
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(147): warning C4156: deletion of an array expression without using the array form of 'delete'; array form substituted
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(147): warning C4154: deletion of an array expression; conversion to pointer supplied
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(165): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(167): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(199): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(201): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(263): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(273): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(273): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(276): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(277): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(277): warning C4018: '<': signed/unsigned mismatch
+     1>Done Building Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:02.23
+Time Elapsed 00:00:00.70

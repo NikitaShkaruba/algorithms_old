@@ -1,4 +1,5 @@
 #include "DataStructures.h"
+#include <algorithm>
 
 namespace algo {
 	class RedBlackTree {
@@ -251,5 +252,163 @@ namespace algo {
 
 		AVLTree *left_, *right_;
 		int bFactor_, key_;
+	};
+	class Heap {
+	public:
+		Heap() : arr(nullptr), count(0), memory(16) {}
+		Heap(int* arr, size_t size) : count(0), memory(16) {
+			for (size_t i = 0; i < size; i++)
+				this->push(arr[i]);
+		}
+		~Heap() {
+			this->clear();
+		}
+
+		bool empty(void) const { return (!count); }
+		size_t size(void) const { return count; }
+
+		void push(int value) {
+			size_t current, parent; 
+
+			_alloc();
+			arr[count] = value;
+
+			current = count++;
+			parent = (current == 0) ? 0 : (current - 1) >> 1;
+
+			// pull new one up | reverse heapify 
+			while ((current > 0) && arr[current] < arr[parent]) {
+				int buf = arr[current];
+				arr[current] = arr[parent];
+				arr[parent] = buf;
+
+				current = parent--;
+				if (current == 0)
+					break;
+				parent >>= 1;
+			}
+		}
+		int pop() {
+			if (count > 0) {
+				int buff = arr[0];
+				arr[0] = arr[--count];
+				this->_heapify(0);
+				return buff;
+			} else {
+				count = 0;
+				throw "heap is empty, but you want to get element!";
+			}
+		}
+		int peek() {
+			if (count > 1)
+				return arr[0];
+			else 
+				throw "heap is empty, but you want to get element!";
+		}
+		void clear() {
+			if (arr != nullptr)
+				delete[] arr;
+			arr = nullptr;
+			count = 0;
+			memory = 16;
+		} 
+
+	private:
+		int* arr;
+		size_t count;
+		size_t memory;
+
+		void _alloc() {
+			size_t newMemory;
+			int* newArr;
+
+			if (arr == nullptr)
+				arr = new int[memory];
+
+			// If memory dried up
+			if ((count + 1) >= memory) {
+				newMemory = count * 2;
+				newArr = new int[newMemory];
+				for (size_t i = 0u; i < count; i++)
+					newArr[i] = arr[i];
+				delete[] arr;
+				arr = newArr;
+				memory = newMemory;
+			}
+		}
+		void _heapify(size_t index) {
+			size_t l, r, small;
+
+			while (true) {
+				l = (index << 1) + 1u;
+				r = (index << 1) + 2u;
+
+				// Who's the smallest?
+				if ((l < count) && arr[l] < arr[index])
+					small = l;
+				else
+					small = index;
+				if ((r < count) && arr[r] < arr[small])
+					small = r;
+
+				// put it in
+				if (small != index) {
+					int buffer = arr[index];
+					arr[index] = arr[small];
+					arr[small] = buffer;
+					index = small; // And go down
+				}
+				else break;
+			}
+		}
+	};
+	
+	template<typename T>
+	class List {
+	public:
+		List() : memory(4), size(0) {
+			arr = new T[memory]; 
+		}
+		List(int first) : memory(4), size(0) {
+			this->arr = new T[memory]; 
+			this->arr[0] = first;
+		}
+		List(int* arr_, size_t size_): memory(size_ + 4), size(size_) {
+			arr = new T[memory];
+			for(size_t i = 0; i < size; i++)
+				arr[i] = arr_[i];
+		}
+
+		void insert(int element) {
+			if (size == memory) {
+				T* newArr = new int[memory *= 2];
+				std::memcpy(newArr, arr, size);
+				delete arr;
+				arr = newArr;
+			}
+			arr[size++] = element;
+		}
+		void remove(int index) {
+			for(size_t i = index; i < size-1; i++)
+				arr[i] = arr[i+1];
+			size--;
+		}
+		
+		T* getArray() {
+			return arr;
+		}
+		size_t getSize() {
+			return size;
+		}
+		int operator[] (int index) {
+			if (index < size)
+				return arr[index];
+			else 
+				throw "List index out of size";
+		}
+	private:
+		T* arr;
+		size_t size;
+		size_t memory;
 	};
 }
