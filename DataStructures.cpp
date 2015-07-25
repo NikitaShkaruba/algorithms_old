@@ -1,7 +1,11 @@
-#include "DataStructures.h"
 #include <algorithm>
+#include <vector>
+#include <string>
+#include "DataStructures.h"
+using namespace std;
 
 namespace algo {
+	// Shit, add a header, dumb ass.
 	class RedBlackTree {
 	public:
 		explicit RedBlackTree(int value) : key_(value), color_(red), parent_(nullptr), left_(0), right_(0) {}
@@ -410,5 +414,64 @@ namespace algo {
 		T* arr;
 		size_t size;
 		size_t memory;
+	};
+	
+	class Graph {
+	public:
+		Graph(Node* nodes, Edge* edges, size_t nodeCount, size_t edgeCount) : nodes_(nodes), edges_(edges), n_(nodeCount), m_(edgeCount) {}
+		
+	private:
+		Node* nodes_;	// O(n)
+		Edge* edges_;	// O(m)
+		size_t n_, m_;	// node Count and edge Count respectively
+	};
+	class Node {
+	public:
+		Node(string content, Node* nodesToConnect, size_t nodeCount) : content_(content) {
+			for(size_t i = 0; i < nodeCount; i++)
+				this->attach(&nodesToConnect[i]);	
+		}
+		Node(string content) : content_(content), edges_() {}
+
+		void attach(Node* neighbour) {
+			Edge* edge = new Edge(this, neighbour);
+			neighbour->edges_.push_back(edge);
+			this->edges_.push_back(edge);
+		}
+		void crop(Edge* edge) {
+			for(auto i = edges_.begin(); i < edges_.end(); i++) 
+				if (*i == edge) {
+					edges_.erase(i);
+				}
+			throw "This node have not this edge.";
+		}
+		void fuse(Node* node) {
+			throw "Not implemented exception";
+		}
+		Node* go(Edge* edge) {
+			if (edge->from_ == this || edge->to_ == this)
+				return edge->from_ == this? edge->to_ : edge->from_;	
+			else 
+				throw "This node don't have this edge";
+		}
+
+	private:
+		string content_;
+		vector<Edge*> edges_;
+	};
+	class Edge {
+	public:
+		Edge(Node* from, Node* to) : from_(from), to_(to) {}
+
+		~Edge() {
+			// delete from from_
+			// delete from to_
+		}
+		bool isSelfLoop() {
+			return from_ == to_;
+		}
+
+		Node* from_;
+		Node* to_;
 	};
 }

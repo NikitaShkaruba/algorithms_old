@@ -1,30 +1,70 @@
-﻿Build started 7/24/2015 10:42:39 PM.
+﻿Build started 7/25/2015 9:30:32 PM.
      1>Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Algorithms.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Algorithms.cpp DataStructures.cpp Program.cpp Tests.cpp
+         DataStructures.cpp
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2061: syntax error: identifier 'Node'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C2143: syntax error: missing ';' before '*'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C2143: syntax error: missing ';' before '*'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2065: 'from': undeclared identifier
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2065: 'to': undeclared identifier
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2614: 'algo::Edge': illegal member initialization: 'from_' is not a base or member
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2614: 'algo::Edge': illegal member initialization: 'to_' is not a base or member
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(435): error C2661: 'algo::Edge::Edge': no overloaded function takes 2 arguments
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(447): error C2039: 'from_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(447): error C2039: 'to_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(448): error C2039: 'from_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(448): error C2039: 'to_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
          Algorithms.cpp
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(29): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(132): error C2148: total size of array must not exceed 0x7fffffff bytes
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(135): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(141): error C2440: '=': cannot convert from 'int' to 'int *'
-         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(141): note: Conversion from integral type to pointer type requires reinterpret_cast, C-style cast or function-style cast
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(144): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(145): error C2440: '=': cannot convert from 'int *' to 'int'
-         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(145): note: There is no context in which this conversion is possible
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(147): warning C4156: deletion of an array expression without using the array form of 'delete'; array form substituted
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(147): warning C4154: deletion of an array expression; conversion to pointer supplied
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(165): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(167): warning C4018: '>': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(199): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(201): warning C4018: '>': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(263): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(273): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(273): warning C4804: '<': unsafe use of type 'bool' in operation
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(276): warning C4018: '<': signed/unsigned mismatch
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(277): warning C4804: '<': unsafe use of type 'bool' in operation
-     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(277): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2061: syntax error: identifier 'Node'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C2143: syntax error: missing ';' before '*'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(423): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C2143: syntax error: missing ';' before '*'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(424): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2065: 'from': undeclared identifier
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2065: 'to': undeclared identifier
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2614: 'algo::Edge': illegal member initialization: 'from_' is not a base or member
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(421): error C2614: 'algo::Edge': illegal member initialization: 'to_' is not a base or member
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(435): error C2661: 'algo::Edge::Edge': no overloaded function takes 2 arguments
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(447): error C2039: 'from_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(447): error C2039: 'to_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(448): error C2039: 'from_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(448): error C2039: 'to_': is not a member of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+         c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\datastructures.cpp(419): note: see declaration of 'algo::Edge'
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(119): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(142): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(151): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(172): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(174): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(206): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(208): warning C4018: '>': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(270): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(280): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(280): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(283): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(284): warning C4804: '<': unsafe use of type 'bool' in operation
+     1>c:\users\nick\documents\visual studio 2013\projects\sandbox\sandbox\algorithms.cpp(284): warning C4018: '<': signed/unsigned mismatch
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         Tests.cpp
+         Program.cpp
      1>Done Building Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)) -- FAILED.
 
 Build FAILED.
 
-Time Elapsed 00:00:00.70
+Time Elapsed 00:00:01.22
