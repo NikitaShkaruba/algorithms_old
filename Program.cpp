@@ -1,4 +1,4 @@
-﻿//#include "DataStructures.cpp"
+﻿#include "DataStructures.cpp"
 #include "Algorithms.h"
 #include <iostream>
 #include <fstream>
@@ -14,10 +14,11 @@ int* getArray(string name, size_t size) {
 	file.close();
 	return arr;
 }
-void main() {
-	
-	
+void getGraph(string name) {
+	ifstream input(name);
 
+}
+void main() {
 
 	polygon::RunSortTests();
 	polygon::RunRedBlackTreeTests();

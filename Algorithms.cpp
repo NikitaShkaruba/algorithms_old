@@ -154,7 +154,7 @@ namespace algo {
 		delete output;
 	}
 
-	// Selection problem
+	// Selection problems
 	int& RSelect(int* arr, size_t size, size_t k) {
 		// Complexity O(n) 
 		// It's a little messy to write it in c++, so give here only COPIES of the array real
@@ -326,5 +326,19 @@ namespace algo {
 			}
 		}
 		return nullptr;
+	}
+
+	// Graph problems
+	Edge* RandomContraction(Graph graph) {
+		Edge* edges = graph.getEdges();
+
+		while (graph.getNodesCount() != 2) {
+			int i = rand() /graph.getNodesCount();
+			Edge* chosenEdge = edges + i;
+			//remove self loops
+			chosenEdge->fuse();
+		}
+
+		return edges;
 	}
 }

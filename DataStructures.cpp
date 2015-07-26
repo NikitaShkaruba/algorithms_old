@@ -1,15 +1,15 @@
+#include "DataStructures.h" // for solving Node-Edge self-including problem. Man. Sry if it bores you.
 #include <algorithm>
 #include <vector>
 #include <string>
-#include "DataStructures.h"
 using namespace std;
 
 namespace algo {
 	// Shit, add a header, dumb ass.
 	class RedBlackTree {
 	public:
-		explicit RedBlackTree(int value) : key_(value), color_(red), parent_(nullptr), left_(0), right_(0) {}
-		explicit RedBlackTree(int* arr, size_t size) : RedBlackTree(arr[0]) {
+		RedBlackTree::RedBlackTree(int value) : key_(value), color_(red), parent_(nullptr), left_(0), right_(0) {}
+		RedBlackTree::RedBlackTree(int* arr, size_t size) : RedBlackTree(arr[0]) {
 			this->color_ = black;
 
 			for (size_t i = 1; i < size; i++)
@@ -45,7 +45,6 @@ namespace algo {
 				return true;
 			return false;
 		}
-
 		void preTraversal(void action(RedBlackTree* node)) {
 			action(this);
 
@@ -74,14 +73,14 @@ namespace algo {
 			action(this);
 		}
 		bool isBinaryTree() {
-			if (this->left_ && this->right_)
-				return this->left_->key_ < this->key_ && this->key_ < this->right_->key_;
-			else if (this->left_)
-				return this->left_->key_ < this->key_;
-			else if (this->right_)
-				return this->key_ < this->right_->key_;
-		}
-
+		if (this->left_ && this->right_)
+			return this->left_->key_ < this->key_ && this->key_ < this->right_->key_;
+		else if (this->left_)
+			return this->left_->key_ < this->key_;
+		else if (this->right_)
+			return this->key_ < this->right_->key_;
+	}
+	
 	private:
 		void fix_() {
 			if (this->isRoot())		// case 1
@@ -197,7 +196,6 @@ namespace algo {
 				left_->parent_ = nullptr;
 			left_ = node;
 		}
-
 		enum colors { black = false, red = true };
 		RedBlackTree* getGrandpa() {
 			return parent_ ? parent_->parent_ : nullptr;
@@ -206,7 +204,6 @@ namespace algo {
 			RedBlackTree* grandPa = getGrandpa();
 			return(grandPa) ? ((this->parent_->isLeft()) ? grandPa->right_ : grandPa->left_) : nullptr;
 		}
-
 		RedBlackTree *parent_, *left_, *right_;
 		bool color_;
 		int key_;
@@ -415,38 +412,54 @@ namespace algo {
 		size_t size;
 		size_t memory;
 	};
-	
-	class Graph {
+
+	class Edge {
 	public:
-		Graph(Node* nodes, Edge* edges, size_t nodeCount, size_t edgeCount) : nodes_(nodes), edges_(edges), n_(nodeCount), m_(edgeCount) {}
+		Edge(Node* from, Node* to) : from_(from), to_(to) {}
+		~Edge() {
+			// delete from from_
+			// delete from to_
+		}
 		
-	private:
-		Node* nodes_;	// O(n)
-		Edge* edges_;	// O(m)
-		size_t n_, m_;	// node Count and edge Count respectively
+		bool isSelfLoop() {
+			return from_ == to_;
+		}
+		void fuse() {
+			//from_->content_ += to_->content_;
+			//for(size_t i = 0; i < to_->edges_.size(); i++) {
+			//	Node* neighbour = to_->edges_[i]->from_ == to_ ? from_ : to_;
+			//	
+			//	neighbour->crop(to_);
+			//	neighbour->attach(from_);
+			//	delete to_;
+			//	delete this;
+			//}
+			// concat other
+		}
+
+		Node* from_;
+		Node* to_;
 	};
 	class Node {
 	public:
-		Node(string content, Node* nodesToConnect, size_t nodeCount) : content_(content) {
+		Node(string content, Node* nodesToConnect, size_t nodeCount) : content_(content), edges_() {
 			for(size_t i = 0; i < nodeCount; i++)
 				this->attach(&nodesToConnect[i]);	
 		}
-		Node(string content) : content_(content), edges_() {}
+		explicit Node(string content) : content_(content), edges_() {}
 
 		void attach(Node* neighbour) {
 			Edge* edge = new Edge(this, neighbour);
 			neighbour->edges_.push_back(edge);
 			this->edges_.push_back(edge);
 		}
-		void crop(Edge* edge) {
+		void crop(Node* node) {
 			for(auto i = edges_.begin(); i < edges_.end(); i++) 
-				if (*i == edge) {
+				if ((*i)->from_ == node || (*i)->to_ == node) {
 					edges_.erase(i);
+					return;
 				}
 			throw "This node have not this edge.";
-		}
-		void fuse(Node* node) {
-			throw "Not implemented exception";
 		}
 		Node* go(Edge* edge) {
 			if (edge->from_ == this || edge->to_ == this)
@@ -454,24 +467,31 @@ namespace algo {
 			else 
 				throw "This node don't have this edge";
 		}
-
+	
 	private:
 		string content_;
-		vector<Edge*> edges_;
+		vector<Edge *> edges_;
 	};
-	class Edge {
+	class Graph {
 	public:
-		Edge(Node* from, Node* to) : from_(from), to_(to) {}
-
-		~Edge() {
-			// delete from from_
-			// delete from to_
+		explicit Graph(Node* nodes, Edge* edges, size_t nodeCount, size_t edgeCount) : nodes_(nodes), edges_(edges), n_(nodeCount), m_(edgeCount) {}
+		
+		Node* getNodes() {
+			return nodes_;
 		}
-		bool isSelfLoop() {
-			return from_ == to_;
+		Edge* getEdges() {
+			return edges_;
+		}
+		size_t getNodesCount() {
+			return n_;
+		}
+		size_t getEdgesCount() {
+			return m_;
 		}
 
-		Node* from_;
-		Node* to_;
+	private:
+		Node* nodes_;	// O(n)
+		Edge* edges_;	// O(m)
+		size_t n_, m_;	// node Count and edge Count respectively
 	};
 }

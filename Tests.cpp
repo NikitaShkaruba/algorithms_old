@@ -63,7 +63,7 @@ namespace polygon {
 	void RunRedBlackTreeTests() {
 		for (size_t i = 0; i < 11; i++) {
 			size_t size = 7 + i;
-			int* arr = new int[pow(2, size)];
+			int* arr = new int[(int)pow(2, size)];
 			for (size_t j = 0; j < size; j++)
 				arr[j] = rand();
 			RedBlackTree tree(arr, size);
@@ -72,5 +72,8 @@ namespace polygon {
 				assert(node->isBinaryTree());
 			});
 		}
+	}
+	void RunGraphTests() {
+		//for(size_t i = 0; i < )
 	}
 }
