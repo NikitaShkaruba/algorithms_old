@@ -1,6 +1,7 @@
 #pragma once
 
 namespace polygon {
+	void RunGraphTests();
 	void RunCountInversionsTests();
 	void RunSortTests();
 	void RunRedBlackTreeTests();

@@ -74,6 +74,11 @@ namespace polygon {
 		}
 	}
 	void RunGraphTests() {
-		//for(size_t i = 0; i < )
+		Node a;
+		Node b(&a, 1);
+		Node c;
+
+		c.attach(&a);
+		c.attach(&b);
 	}
 }

@@ -19,7 +19,7 @@ void getGraph(string name) {
 
 }
 void main() {
-
+	polygon::RunGraphTests();
 	polygon::RunSortTests();
 	polygon::RunRedBlackTreeTests();
 	polygon::RunCountInversionsTests();

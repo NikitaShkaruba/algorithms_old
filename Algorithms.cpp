@@ -155,7 +155,7 @@ namespace algo {
 	}
 
 	// Selection problems
-	int& RSelect(int* arr, size_t size, size_t k) {
+	int& RanomizedSelect(int* arr, size_t size, size_t k) {
 		// Complexity O(n) 
 		// It's a little messy to write it in c++, so give here only COPIES of the array real
 		if (size == 1)
@@ -170,13 +170,13 @@ namespace algo {
 		swap(arr[0], arr[i-1]);
 
 		if (k < i)
-			return RSelect(arr, i-1, k);  
+			return RanomizedSelect(arr, i-1, k);  
 		if (k > i)
-			return RSelect(arr + i, size - i, k - i);
+			return RanomizedSelect(arr + i, size - i, k - i);
 		if (i == k)
 			return arr[i];
 	}
-	int& DSelect(int* arr, size_t size, size_t k) {
+	int& DeterminedSelect(int* arr, size_t size, size_t k) {
 		// Complexity O(n) 
 		// It's a little messy to write it in c++, so give here only COPIES of the array real
 		if (size == 1)
@@ -191,7 +191,7 @@ namespace algo {
 				medians[i/5] = arr[i + 2];
 			}
 		}
-		int key = DSelect(medians, size/5, size/10);
+		int key = DeterminedSelect(medians, size/5, size/10);
 		delete buf;
 		delete medians;
 		int i = 1; // i points on pivot element 
@@ -204,9 +204,9 @@ namespace algo {
 		swap(arr[0], arr[i-1]);
 
 		if (k < i)
-			return RSelect(arr, i-1, k);  
+			return RanomizedSelect(arr, i-1, k);  
 		if (k > i)
-			return RSelect(arr + i, size - i, k - i);
+			return RanomizedSelect(arr + i, size - i, k - i);
 		if (i == k)
 			return arr[i];
 	}
@@ -329,16 +329,26 @@ namespace algo {
 	}
 
 	// Graph problems
-	Edge* RandomContraction(Graph graph) {
-		Edge* edges = graph.getEdges();
+	Graph KargerMinCut(Graph graph) {
+		// Complexity: O(m*n^2)
+		size_t n = graph.getEdgesCount();
+		Graph best(graph);
 
-		while (graph.getNodesCount() != 2) {
-			int i = rand() /graph.getNodesCount();
-			Edge* chosenEdge = edges + i;
-			//remove self loops
-			chosenEdge->fuse();
+		for (size_t i = 0; i < pow(n, 2)*log(n); i++) { //
+			Graph copy = graph;
+			Edge* edges = copy.getEdges();
+
+			while (copy.getNodesCount() != 2) {
+				size_t i = rand() / copy.getEdgesCount();
+				Edge* chosen = edges + i;
+
+				chosen->fuse();
+				for(auto i = edges)
+			}
+
+			if (copy.getEdgesCount() < best.getEdgesCount()) {
+			}
 		}
-
-		return edges;
+		return best;
 	}
 }

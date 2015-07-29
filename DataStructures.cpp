@@ -415,26 +415,19 @@ namespace algo {
 
 	class Edge {
 	public:
+		Edge(Edge& edge): from_(edge.from_), to_(edge.to_) {}
 		Edge(Node* from, Node* to) : from_(from), to_(to) {}
+		Edge(): from_(nullptr), to_(nullptr) {}
 		~Edge() {
-			// delete from from_
-			// delete from to_
+			from_->crop(to_);
+			to_->crop(from_);
 		}
 		
 		bool isSelfLoop() {
 			return from_ == to_;
 		}
 		void fuse() {
-			//from_->content_ += to_->content_;
-			//for(size_t i = 0; i < to_->edges_.size(); i++) {
-			//	Node* neighbour = to_->edges_[i]->from_ == to_ ? from_ : to_;
-			//	
-			//	neighbour->crop(to_);
-			//	neighbour->attach(from_);
-			//	delete to_;
-			//	delete this;
-			//}
-			// concat other
+			from_->merge(to_);
 		}
 
 		Node* from_;
@@ -442,16 +435,26 @@ namespace algo {
 	};
 	class Node {
 	public:
-		Node(string content, Node* nodesToConnect, size_t nodeCount) : content_(content), edges_() {
+		Node(Node* nodesToConnect, size_t nodeCount) : edges_() {
 			for(size_t i = 0; i < nodeCount; i++)
 				this->attach(&nodesToConnect[i]);	
 		}
-		explicit Node(string content) : content_(content), edges_() {}
+		Node() : edges_() {}
+		~Node() {
+			for (auto i = edges_.begin(); i != edges_.end(); i++)
+				delete *i;
+		}
 
 		void attach(Node* neighbour) {
 			Edge* edge = new Edge(this, neighbour);
+			
 			neighbour->edges_.push_back(edge);
 			this->edges_.push_back(edge);
+		}
+		void merge(Node* node) {
+			for(auto i = node->edges_.begin(); i != node->edges_.end(); i++)
+				attach((*i)->from_ == node ? (*i)->to_ : (*i)->from_);
+			delete node;
 		}
 		void crop(Node* node) {
 			for(auto i = edges_.begin(); i < edges_.end(); i++) 
@@ -461,21 +464,26 @@ namespace algo {
 				}
 			throw "This node have not this edge.";
 		}
-		Node* go(Edge* edge) {
+		Node* go(Edge* edge) const  {
 			if (edge->from_ == this || edge->to_ == this)
 				return edge->from_ == this? edge->to_ : edge->from_;	
 			else 
 				throw "This node don't have this edge";
 		}
-	
+
 	private:
-		string content_;
-		vector<Edge *> edges_;
+		vector<Edge*> edges_;
 	};
 	class Graph {
 	public:
 		explicit Graph(Node* nodes, Edge* edges, size_t nodeCount, size_t edgeCount) : nodes_(nodes), edges_(edges), n_(nodeCount), m_(edgeCount) {}
-		
+		Graph(Graph& graph) {
+			n_ = graph.n_;
+			m_ = graph.m_;
+			nodes_ = new Node[n_];
+			edges_ = new Edge[m_];
+		}
+
 		Node* getNodes() {
 			return nodes_;
 		}
