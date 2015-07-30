@@ -1,25 +1,15 @@
-﻿#include "DataStructures.cpp"
-#include "Algorithms.h"
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
+#include <string>
+#include <sstream>
+
+#include "DataStructures.h"
+#include "Algorithms.h"
 #include "Tests.h"
 using namespace std;
 
-int* getArray(string name, size_t size) {
-	ifstream file(name);
-	int* arr = new int[size], i = 0;
-	for(size_t i = 0; i < size; i++)
-		 file >> arr[i];
-	
-	file.close();
-	return arr;
-}
-void getGraph(string name) {
-	ifstream input(name);
-
-}
 void main() {
-	polygon::RunGraphTests();
+	//polygon::RunGraphTests();
 	polygon::RunSortTests();
 	polygon::RunRedBlackTreeTests();
 	polygon::RunCountInversionsTests();

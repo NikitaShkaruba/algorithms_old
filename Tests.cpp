@@ -1,10 +1,12 @@
+#include "DataStructures.h"
 #include "Algorithms.h"
-#include "DataStructures.cpp"
+#include "Tests.h"
 #include <iostream>
 #include <cassert> 
 #include <time.h>
 #include <string>
 #include <fstream>
+#include <sstream>
 using namespace algo;
 
 namespace polygon {
@@ -27,6 +29,37 @@ namespace polygon {
 				return false;
 		return true;
 	}
+	//Graph getGraph(string filename) {
+	//	ifstream input(fileName);
+	//	Node* nodes = new Node[200];
+	//	Edge* edges = new Edge[200];
+	//	size_t i = 0;
+	//	string line;
+	//
+	//	while (getline(input, line)) {
+	//		istringstream iss(line);
+	//		int i, j;
+	//
+	//		iss >> i; // first one
+	//		while (iss >> j) {
+	//			if (!nodes[i-1].isConnected(nodes + j-1)) {
+	//				nodes[i-1].attach(nodes + j-1);
+	//				// what to do, mate?? I need edges
+	//			}
+	//		}
+	//	}
+	//
+	//	return Graph(nodes+1, 20);
+	//}	
+	//int* getArray(string name, size_t size) {
+	//	ifstream file(name);
+	//	int* arr = new int[size], i = 0;
+	//	for(size_t i = 0; i < size; i++)
+	//		 file >> arr[i];
+	//
+	//	file.close();
+	//	return arr;
+	//}
 
 	void RunSortTests() {
 		void(*sorts[])(int*, size_t) = { SelectionSort, InsertionSort, BubbleSort, MergeSort, QuickSort };
@@ -73,12 +106,8 @@ namespace polygon {
 			});
 		}
 	}
-	void RunGraphTests() {
-		Node a;
-		Node b(&a, 1);
-		Node c;
-
-		c.attach(&a);
-		c.attach(&b);
-	}
+	//void RunGraphTests() {
+	//	Graph test = getGraph("Graph.txt");
+	//	
+	//}
 }

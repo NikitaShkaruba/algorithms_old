@@ -1,5 +1,5 @@
 #include "Algorithms.h"
-#include "DataStructures.cpp"
+#include "DataStructures.h"
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
@@ -111,16 +111,16 @@ namespace algo {
 			arr[i] = heap.pop();
 	}
 	void BucketSort(int* arr, size_t size) {
-		int max = getMax(arr, size);
-		List<int>* buckets = new List<int>[(int)log10(max)];
-		
-		for(size_t i = 0; i < size; i++)
-			buckets[(int)log10(arr[i])].insert(arr[i]);
-		for(size_t i = 0; i < (int)log10(max); i++) {
-			MergeSort(buckets[i].getArray(), buckets[i].getSize());
-			for(size_t j = 0; j < buckets[i].getSize(); j++)
-				arr[i] = buckets[i][j];
-		}
+		// int max = getMax(arr, size);
+		// vector<int>* buckets = new List<int>[(int)log10(max)];
+		// 
+		// for(size_t i = 0; i < size; i++)
+		// 	buckets[(int)log10(arr[i])].insert(arr[i]);
+		// for(size_t i = 0; i < (int)log10(max); i++) {
+		// 	MergeSort(buckets[i].getArray(), buckets[i].getSize());
+		// 	for(size_t j = 0; j < buckets[i].getSize(); j++)
+		// 		arr[i] = buckets[i][j];
+		// }
 	}
 	void CountingSort(int* arr, size_t size) {
 		int* count = new int[sizeof(int)];
@@ -329,26 +329,27 @@ namespace algo {
 	}
 
 	// Graph problems
-	Graph KargerMinCut(Graph graph) {
-		// Complexity: O(m*n^2)
-		size_t n = graph.getEdgesCount();
-		Graph best(graph);
-
-		for (size_t i = 0; i < pow(n, 2)*log(n); i++) { //
-			Graph copy = graph;
-			Edge* edges = copy.getEdges();
-
-			while (copy.getNodesCount() != 2) {
-				size_t i = rand() / copy.getEdgesCount();
-				Edge* chosen = edges + i;
-
-				chosen->fuse();
-				for(auto i = edges)
-			}
-
-			if (copy.getEdgesCount() < best.getEdgesCount()) {
-			}
-		}
-		return best;
-	}
+	//Graph KargerMinCut(Graph graph) {
+	//	// Complexity: O(m*n^2)
+	//	size_t n = graph.getEdgesCount();
+	//	Graph best(graph);
+	//
+	//	for (size_t i = 0; i < pow(n, 2)*log(n); i++) { //
+	//		Graph copy = graph;
+	//		Edge* edges = copy.getEdges();
+	//
+	//		while (copy.getNodesCount() != 2) {
+	//			size_t i = rand() / copy.getEdgesCount();
+	//			Edge* chosen = edges + i;
+	//
+	//			chosen->fuse();
+	//			// for(auto i = edges)
+	//		}
+	//
+	//		if (copy.getEdgesCount() < best.getEdgesCount()) {
+	//			best = copy;
+	//		}
+	//	}
+	//	return best;
+	//}
 }

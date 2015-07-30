@@ -1,18 +1,14 @@
-﻿Build started 7/18/2015 6:21:50 PM.
-     1>Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
+﻿Build started 7/30/2015 10:48:15 AM.
+     1>Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Stepic.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Stepic.cpp
          Stepic.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Release\SandBox.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Release\SandBox.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Release\SandBox.lib" /MACHINE:X86 /SAFESEH Release\Algorithms.obj
-         Release\DataStructures.obj
-         Release\Program.obj
-         Release\Stepic.obj
-         Release\Tests.obj
-     1>Program.obj : error LNK2005: "void __cdecl algo::myPrint(int)" (?myPrint@algo@@YAXH@Z) already defined in DataStructures.obj
-     1>C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\Release\SandBox.exe : fatal error LNK1169: one or more multiply defined symbols found
-     1>Done Building Project "C:\Users\Nick\documents\visual studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)) -- FAILED.
+     1>Stepic.cpp(60): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+     1>Stepic.cpp(64): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+     1>Done Building Project "C:\Users\Nick\Documents\Visual Studio 2013\Projects\SandBox\SandBox\SandBox.vcxproj" (Build target(s)) -- FAILED.
 
 Build FAILED.
 
-Time Elapsed 00:00:01.18
+Time Elapsed 00:00:00.58
