@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="DataStructures.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Stepic.cpp" />
     <ClCompile Include="Tests.cpp" />
@@ -87,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="Algorithms.h" />
     <ClInclude Include="DataStructures.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

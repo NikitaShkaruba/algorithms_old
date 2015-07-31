@@ -1,15 +1,11 @@
-﻿#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-
-#include "DataStructures.h"
+﻿#include "DataStructures.cpp"
 #include "Algorithms.h"
+#include <iostream>
+#include <fstream>
 #include "Tests.h"
-using namespace std;
 
 void main() {
-	//polygon::RunGraphTests();
+	polygon::RunGraphTests();
 	polygon::RunSortTests();
 	polygon::RunRedBlackTreeTests();
 	polygon::RunCountInversionsTests();

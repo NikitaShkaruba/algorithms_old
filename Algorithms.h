@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include "Graph.h"
 typedef std::pair<int, int> point;
 
 namespace algo {
@@ -14,16 +15,8 @@ namespace algo {
 	void CountingSort(int* arr, size_t size);
 	void RadixSort(int* arr, size_t size);
 
-	// Selection problems
-	int& RanomizedSelect(int* arr, size_t size, size_t k);
-	int& DeterminedSelect(int* arr, size_t size, size_t k);
 
-	// Count inversions problem
 	unsigned long CountInversions(int* arr, size_t size);
-
-	// Closest pair problem
 	point* GetClosestPair(point arr[], size_t size);
-
-	// Graph problems
 	// Graph KargerMinCut(Graph graph);
 }
