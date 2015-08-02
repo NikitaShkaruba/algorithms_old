@@ -29,45 +29,46 @@ namespace polygon {
 	};
 	class Node {
 	public:
-		Node(list<Edge*> edges) {
-			for each (auto var in edges)
-				edges_.push_back(var);
-		}
-		Node() : edges_() {}
+		Node(string content) : content(content) {}
 		~Node() {
-			edges_.clear();
+			edges.clear();
 		}
-
 		bool operator==(const Node& other) {
-			if (edges_.size() != other.edges_.size())
+			if (edges.size() != other.edges.size())
 				return false;
 
-			for(auto i = 0; i < edges_.size(); i++)
-				if (this->edges_.at(i) != other.edges_.at(i))
+			for(auto i = 0; i < edges.size(); i++)
+				if (this->edges.at(i) != other.edges.at(i))
 					return false;
 			return true;
 		}
-		bool isConnected(const Node& node) {
-			for (auto i = node.edges_.begin(); i != node.edges_.end(); i++)
-				if (*(*i)->to_ == node || *(*i)->from_ == node)
-					return true;
-			return false;
-		}
 
-		vector<Edge*> edges_;
+		string content;
+		vector<Edge*> edges;
 	};
-
 	class Graph {
 	public:
 		Graph(vector<Node> nodes, size_t edgeCount) {
-			nodes_ = nodes;
-			edgeCount_ = edgeCount;
+			nodes = nodes;
+			edgeCount = edgeCount;
 		}
-		Graph(const Graph& graph) {
-			nodes_ = graph.nodes_;
-			edgeCount_ = graph.edgeCount_;
+		Graph(const Graph& graph) : Graph(graph.nodes.size()) {
+			for (size_t i = 0; i < graph.nodes.size(); i++)
+				for (size_t j = 0; j < graph.nodes[i].edges.size(); j++) {
+					Node& a = nodes[stoi(graph.nodes[i].edges[j]->from_->content)];
+					Node& b = nodes[stoi(graph.nodes[i].edges[j]->to_->content)];
+					
+					if (!areConnected(a, b))
+						connect(&a, &b);
+				}
+
+			edgeCount = graph.edgeCount;
 		}
-		Graph() : nodes_(), edgeCount_(0) { }
+		Graph(size_t nodeCount) {
+			for(size_t i = 0; i < nodeCount; i++)
+				add(Node {std::to_string(i)});
+		}
+		Graph() : nodes(), edgeCount(0) { }
 		~Graph() {}
 		
 		Graph& operator=(const Graph& graph) {
@@ -76,120 +77,125 @@ namespace polygon {
 			return *this;
 		}
 		void swap(Graph& other) {
-			vector<Node> buf2 = nodes_;
-			nodes_ = other.nodes_;
-			other.nodes_ = buf2;
+			vector<Node> buf2 = nodes;
+			nodes = other.nodes;
+			other.nodes = buf2;
 
-			int buf = edgeCount_;
-			edgeCount_ = other.edgeCount_;
-			other.edgeCount_ = buf;
+			int buf = edgeCount;
+			edgeCount = other.edgeCount;
+			other.edgeCount = buf;
 		}
 
+		Node& find(string content) {
+			for(auto i = nodes.begin(); i != nodes.end(); i++)
+				if (i->content == content)
+					return *i;
+			throw "Can't find this node";
+		}
+		bool areConnected(const Node& a, const Node& b) const {
+			for (auto i = a.edges.begin(); i != a.edges.end(); i++)
+				if (*(*i)->to_ == b || *(*i)->from_ == b)
+					return true;
+			return false;
+		}
 		void removeSelfLoops(Node& node) {
-			auto it = node.edges_.begin();
-			while (it != node.edges_.end()) {
+			auto it = node.edges.begin();
+			while (it != node.edges.end()) {
 				if ((*it)->isSelfLoop()) {
-					it = node.edges_.erase(it);
-					edgeCount_--;
-				} else {
+					it = node.edges.erase(it);
+					edgeCount--;
+				} else 
 					it++;
-				}
 			}
 		}
-		void fuse(Edge* edge) {
+		Node* fuse(Edge* edge) {
 			Node* merged = edge->from_;
 			Node* extincted = edge->to_;
-			edgeCount_--;
 
-			auto it = extincted->edges_.begin();
-			while (it != extincted->edges_.end()) {
+			merged->content += "+" + extincted->content;
+			auto it = extincted->edges.begin();
+			while (it != extincted->edges.end()) {
+				// need refactoring, coz this method ,eaves one self loop
 				if ((*it)->from_ == extincted)
 					(*it)->from_ = merged;
 				else 
 					(*it)->to_ = merged;
 
-				merged->edges_.push_back(*it);
-				it = extincted->edges_.erase(it);
+				merged->edges.push_back(*it);
+				it = extincted->edges.erase(it);
 			}
-			for (auto i = extincted->edges_.begin(); i != extincted->edges_.end(); i++) {
-			}
-			// delete their own link
-			nodes_.erase(getIterator(*extincted));
+			nodes.erase(getIterator(*extincted));
+			return merged;
 		}
 		void cut(Edge* edge) {
+			throw "not implemented";
 			//auto it = edge->from_->;
 			//edge->from_->edges_.erase(it);
 			//if (!edge->isSelfLoop())
 			//	edge->to_->edges_.erase(it);
 		}
-		void connect(Node& a, Node& b) {
-			Edge* link = new Edge(&a, &b);
-			edgeCount_++;
+		void connect(Node* a, Node* b) {
+			Edge* link = new Edge(a, b);
+			edgeCount++;
 
-			a.edges_.push_back(link);
-			b.edges_.push_back(link);
+			a->edges.push_back(link);
+			b->edges.push_back(link);
 		}
 		void add(Node node) {
-			assert(node.edges_.size() == 0);
-			nodes_.push_back(node);
+			assert(node.edges.size() == 0);
+			nodes.push_back(node);
 		}
 		void add(Graph graph) {
 
 		}
 		vector<Node>::iterator getIterator(Node& node) {
-			for(auto i = nodes_.begin(); i != nodes_.end(); i++)
-				if (node == *i)
+			for(auto i = nodes.begin(); i != nodes.end(); i++) {
+				if (i->content == node.content)
 					return i;
+			}
 			throw "Node does not exist";
 		}
-		//vector<Edge*>::iterator find(Edge& edge) {
-		//	for(auto i = edges_.begin(); i != edges_.end(); i++)
-		//		if (edge == **i)
-		//			return i;
-		//	throw "Edge does not exist";
-		//}
 
-		vector<Node> nodes_;	// O(n)
-		size_t edgeCount_;	// O(m)
+		vector<Node> nodes;	// O(n)
+		size_t edgeCount;
 	};
+
 	Graph getGraph(string fileName) {
+		Graph result(200);
 		ifstream input(fileName);
 		string line;
-		Graph result;
-		size_t nCount = 0, eCount = 0;
-		for(size_t i = 0; i < 200; i++)
-			result.add(Node {});
-
+		int i = 0, j = 0;
+		
 		while (getline(input, line)) {
-			int i = 0, j = 0;
 			istringstream stringStream(line);
 	
 			stringStream >> i; // first one
-			nCount++;
 			while (stringStream >> j) {
-				if (!(result.nodes_.at(i-1).isConnected(result.nodes_.at(j-1))))
-					result.connect(result.nodes_.at(i-1), result.nodes_.at(j-1));
+				if (!(result.areConnected(result.nodes.at(i-1), result.nodes.at(j-1))))
+					result.connect(&result.nodes.at(i-1), &result.nodes.at(j-1));
 			}
 		}
 		return result;
 	}	
 	Graph KargerMinCut(Graph graph) {
 		// Complexity: O(m*n^2)
-		size_t n = graph.edgeCount_;
+		size_t n = graph.edgeCount;
 		Graph best = Graph(graph);
 	
 		for (size_t i = 0; i < pow(n, 2)*log(n); i++) {		// O(log(n)*n^2)
 			Graph copy = Graph(graph);
-	
-			while (copy.nodes_.size() != 2) {				// O(m/log(n))
-				size_t j = rand() / copy.edgeCount_;
-				Edge* chosen = copy.nodes_[j].edges_[rand() / copy.nodes_[j].edges_.size()]; //!
-				Node* merged = chosen->from_;
-				copy.fuse(chosen);
-				copy.removeSelfLoops(*merged);
+			int s = 0;
+			while (copy.nodes.size() != 2) {				// O(m/log(n))
+				if (++s == 22)
+					cout << "shush";
+				size_t r1 = rand() % copy.nodes.size(), r2 = rand() % copy.nodes[r1].edges.size();
+				Edge* chosen = copy.nodes[r1].edges[r2]; //!
+				Node* survived = copy.fuse(chosen);
+				// node vector removes edge pointers, look at node[0].edges[13]
+				copy.removeSelfLoops(*survived);
 			}
 	
-			if (copy.edgeCount_ < best.edgeCount_) 
+			if (copy.edgeCount < best.edgeCount) 
 				best = copy;
 		}
 		return best;
@@ -270,7 +276,8 @@ namespace polygon {
 		}
 	}
 	void RunGraphTests() {
-		Graph result = KargerMinCut(getGraph("Graph.txt"));
-		std::cout << "Minimum cut edges count: " << result.edgeCount_ << std::endl;
+		Graph s = getGraph("Graph.txt");
+		Graph result = KargerMinCut(s);
+		std::cout << "Minimum cut edges count: " << result.edgeCount << std::endl;
  	}
 }
