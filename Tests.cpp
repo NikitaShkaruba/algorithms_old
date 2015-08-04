@@ -15,7 +15,7 @@ namespace polygon {
 	struct Node;  
 	struct Edge {
 	public:
-		Edge(list<Node>::iterator from, list<Node>::iterator to) : from_(&*from), to_(&*to) {} 
+		Edge(Node* from, Node* to) : from_(from), to_(to) {} 
 		~Edge() {}
 
 		bool operator==(const Edge& other) {
@@ -61,7 +61,7 @@ namespace polygon {
 			for (auto it = graph.nodes.begin(); it != graph.nodes.end(); it++)
 				this->nodes.push_back(Node {it->content});
 			for (auto it = graph.edges.begin(); it != graph.edges.end(); it++)
-				connect(getNodeIterator(*it->from_), getNodeIterator(*it->to_));
+				connect(it->from_, it->to_);
 		}
 		Graph() : nodes(), edges() {}
 		~Graph() {}
@@ -81,60 +81,68 @@ namespace polygon {
 			other.edges = buf;
 		}
 
-		list<Node>::iterator getNodeIterator(const Node& node) {
+		void uncheckNodes() {
+			for(auto i = nodes.begin(); i != nodes.end(); i++)
+				i->isExplored = false;
+		}
+		Node* getNode(string content) {
 				for(auto i = nodes.begin(); i != nodes.end(); i++)
-					if (*i == node)
-						return i;
+					if (i->content == content)
+						return &*i;
 
 			throw "Can't find this node";
 		}
-		list<Edge>::iterator getEdgeIterator(const Edge& edge) {
+		Edge* getEdge(const Edge& edge) {
 			for (list<Edge>::iterator i = edges.begin(); i != edges.end(); i++)
 				if (*i == edge)
-					return i;
+					return &*i;
 
 			throw "Can't find this node";
 		}
-		bool haveNode(Node node) {
+		bool haveNode(Node* node) {
+			for (auto i = nodes.begin(); i != nodes.end(); i++)
+				if (&*i == node)
+					return true;
+			
+			return false;
+		}
+		bool haveContent(Node node) {
 			for (auto i = nodes.begin(); i != nodes.end(); i++)
 				if (*i == node)
 					return true;
-			
 			return false;
 		}
 		void add(Node node) {
 			nodes.push_back(node);
 		}
-		list<Edge>::iterator getRandomEdge() {
+		Edge* getRandomEdge() {
 			auto it = edges.begin();
-
 			for (size_t i = rand() % edges.size(); i != 0; i--)
 				it++;
-
-			return it;
+			return &*it;
 		}
 
-		bool areConnected(list<Node>::iterator a, list<Node>::iterator b) {
+		bool areConnected(Node* a, Node* b) {
 			for (auto i = a->edges.begin(); i != a->edges.end(); i++)
 				if (*(*i)->from_ == *b || *(*i)->to_ == *b)
 					return true;
 			
 			return false;
 		}
-		void removeSelfLoops(list<Node>::iterator it) {
-			vector<Edge*>::iterator i = it->edges.begin();
-			while (i != it->edges.end()) {
+		void removeSelfLoops(Node* node) {
+			vector<Edge*>::iterator i = node->edges.begin();
+			while (i != node->edges.end()) {
 				if ((*i)->isSelfLoop()) {
-					this->edges.erase(getEdgeIterator(**i));
-					i = it->edges.erase(i);
+					this->edges.remove(*getEdge(**i));
+					i = node->edges.erase(i);
 				} else
 					i++;
 			}
 		}
-		list<Node>::iterator fuse(list<Edge>::iterator it) {
-			Edge weak = *it;
-			Node* merged = it->from_;
-			Node* extincted = it->to_;
+		Node* fuse(Edge* edge) {
+			Edge weak = *edge;
+			Node* merged = edge->from_;
+			Node* extincted = edge->to_;
 
 			// concat content and rebind edges
 			merged->content += "." + extincted->content;
@@ -155,38 +163,96 @@ namespace polygon {
 			vector<Edge*>::iterator j = merged->edges.begin();
 			while (j != merged->edges.end()) {
 				if (**j == weak) {
-					edges.erase(getEdgeIterator(**j));
 					j = merged->edges.erase(j);
 				} else
 					j++;
 			}
+			edges.remove(*getEdge(**j));
 			// this is a fucking bug
-			nodes.erase(getNodeIterator(*extincted));
-			return getNodeIterator(*merged);
+			nodes.remove(*extincted);
+			return merged;
 		}
-		void cut(list<Edge>::iterator it) {
+		void cut(Edge* edge) {
 			throw "not implemented";
-			edges.erase(getEdgeIterator(*it));
+			edges.remove(*edge);
 		}
-		void connect(list<Node>::iterator a, list<Node>::iterator b) {
+		void connect(Node* a, Node* b) {
 			Edge link(a, b);
 			edges.push_back(link);
 			
-			Edge* pntr = &*getEdgeIterator(link);
+			Edge* pntr = getEdge(link);
 			a->edges.push_back(pntr);
 			b->edges.push_back(pntr);
 		}
-		list<Edge*> BreadthFirstSearch(Graph graph, Node start) {
-			// O(m + n) = O(n)
-			// Warning! all nodes have to be initially unexplored
-			start.isExplored = true;
-			
-
-		}
+		
 		list<Node> nodes;	// O(n)
 		list<Edge> edges;   // O(m)
 	};
 
+	void BreadthFirstSearch(Graph graph, Node* start) {
+			// O(m + n) = O(n)
+			// Warning! all nodes have to be initially unexplored
+			queue<Node*> q;
+			q.push(start);
+			start->isExplored = true;
+
+			while (!q.empty()) {
+				Node* node = q.front(); q.pop();
+				for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
+					Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
+					if (next->isExplored == false) {
+						next->isExplored = true;
+						q.push(next);
+					}
+				}
+			}
+		}
+	vector<Edge*> findShortestPath() {
+		vector<Edge*> best;
+
+		queue<Node*> q;
+			q.push(start);
+			start->isExplored = true;
+
+			while (!q.empty()) {
+				Node* node = q.front(); q.pop();
+				for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
+					Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
+					if (next->isExplored == false) {
+						next->isExplored = true;
+						q.push(next);
+					}
+				}
+			}
+	}
+	vector<Graph> cutGraphs(Graph graph) {
+		graph.uncheckNodes();
+		vector<Graph> result;
+
+		for (auto i = graph.nodes.begin(); i != graph.nodes.end(); i++) {
+			if (i->isExplored == false) {
+				Graph current;
+				current.add(*i);
+
+				queue<Node*> q;
+				q.push(&*i);
+				i->isExplored = true;
+
+				while (!q.empty()) {
+					Node* node = q.front(); q.pop();
+					for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
+						Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
+						if (next->isExplored == false) {
+							current.add(*next);
+							// link them up
+							next->isExplored = true;
+							q.push(next);
+						}
+					}
+				}
+			}
+		}
+	}
 	Graph getGraph(string fileName) {
 		ifstream input(fileName);
 		string line;
@@ -198,17 +264,17 @@ namespace polygon {
 	
 			stringStream >> i; // first one
 			Node center(std::to_string(i));
-			if (!result.haveNode(center))
+			if (!result.haveContent(center))
 				result.add(center);
 
 			while (stringStream >> j) {
 				
 				Node adjacent(std::to_string(j));
-				if (!result.haveNode(adjacent))
+				if (!result.haveContent(adjacent))
 					result.add(adjacent);
 
-				auto it = result.getNodeIterator(center);
-				auto jt = result.getNodeIterator(adjacent);
+				Node* it = result.getNode(center.content);
+				Node* jt = result.getNode(adjacent.content);
 
 				if (!result.areConnected(it, jt))
 					result.connect(it, jt);
@@ -316,6 +382,7 @@ namespace polygon {
 	}
 	void RunGraphTests() {
 		Graph s = getGraph("Graph.txt");
+		BreadthFirstSearch(s, &*s.nodes.begin());
 		Graph result = KargerMinCut(s);
 		std::cout << "Minimum cut edges count: " << result.edges.size() << std::endl;
  	}
