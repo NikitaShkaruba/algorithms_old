@@ -7,7 +7,7 @@ namespace algo {
 
 	template<typename T> class List;
 
-	class Node;
-	class Edge;
-	class Graph;
+	//class Node;
+	//class Edge;
+	//class Graph;
 }

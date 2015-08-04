@@ -1,13 +1,14 @@
-#include "Algorithms.h"
-#include "Graph.h"
 #include "DataStructures.cpp"
+#include "Algorithms.h"
 #include <iostream>
-#include <cassert> 
-#include <list>
-#include <time.h>
-#include <string>
 #include <fstream>
 #include <sstream>
+#include "Graph.h"
+#include <cassert> 
+#include <time.h>
+#include <string>
+#include <queue>
+#include <list>
 using namespace algo;
 
 namespace polygon {
@@ -20,6 +21,9 @@ namespace polygon {
 		bool operator==(const Edge& other) {
 			return (from_ == other.from_ && to_ == other.to_ || from_ == other.to_ && to_ == other.from_);
 		}
+		bool operator!=(const Edge& other) {
+			return (!(*this == other));
+		}
 		bool isSelfLoop() {
 			return (from_ == to_);
 		}
@@ -29,7 +33,7 @@ namespace polygon {
 	};
 	struct Node {
 	public:
-		Node(string content) : edges(), content(content) {}
+		Node(string content) : edges(), content(content), isExplored(false) {}
 		~Node() {}
 		bool operator==(const Node& other) {
 			// if (this->edges.size() != other.edges.size())
@@ -47,6 +51,7 @@ namespace polygon {
 			return this->content == other.content;
 		}
 
+		bool isExplored;
 		vector<Edge*> edges;
 		string content;
 	};
@@ -118,38 +123,45 @@ namespace polygon {
 		}
 		void removeSelfLoops(list<Node>::iterator it) {
 			vector<Edge*>::iterator i = it->edges.begin();
-			while (i != it->edges.end())
+			while (i != it->edges.end()) {
 				if ((*i)->isSelfLoop()) {
 					this->edges.erase(getEdgeIterator(**i));
 					i = it->edges.erase(i);
 				} else
 					i++;
+			}
 		}
 		list<Node>::iterator fuse(list<Edge>::iterator it) {
+			Edge weak = *it;
 			Node* merged = it->from_;
 			Node* extincted = it->to_;
 
+			// concat content and rebind edges
 			merged->content += "." + extincted->content;
 			vector<Edge*>::iterator i = extincted->edges.begin();
 			while (i != extincted->edges.end()) {
-				if ((*i)->from_ == extincted)
-					(*i)->from_ = merged;
-				else 
-					(*i)->to_ = merged;
+				if (**i != weak) {
+					merged->edges.push_back(&**i);
+					if ((*i)->from_ == extincted)
+						(*i)->from_ = merged;
+					else 
+						(*i)->to_ = merged;
+				}
 
 				i = extincted->edges.erase(i);
 			}
 
-			for (vector<Edge*>::iterator trash = merged->edges.begin(); trash != merged->edges.end(); trash++) {
-				if (&**trash == &*it) {
-					merged->edges.erase(trash);
-					break;
-				}
+			// remove all edges between those "merged" and "extincted"
+			vector<Edge*>::iterator j = merged->edges.begin();
+			while (j != merged->edges.end()) {
+				if (**j == weak) {
+					edges.erase(getEdgeIterator(**j));
+					j = merged->edges.erase(j);
+				} else
+					j++;
 			}
-			nodes.erase(getNodeIterator(*extincted));
-			edges.erase(it);
 			// this is a fucking bug
-			
+			nodes.erase(getNodeIterator(*extincted));
 			return getNodeIterator(*merged);
 		}
 		void cut(list<Edge>::iterator it) {
@@ -164,7 +176,13 @@ namespace polygon {
 			a->edges.push_back(pntr);
 			b->edges.push_back(pntr);
 		}
+		list<Edge*> BreadthFirstSearch(Graph graph, Node start) {
+			// O(m + n) = O(n)
+			// Warning! all nodes have to be initially unexplored
+			start.isExplored = true;
+			
 
+		}
 		list<Node> nodes;	// O(n)
 		list<Edge> edges;   // O(m)
 	};
@@ -207,7 +225,10 @@ namespace polygon {
 		for (size_t i = 0; i < pow(n, 2)*log(n); i++) {		// O(log(n)*n^2)
 			Graph copy = Graph(graph);
 
+			int k = 0;
 			while (copy.edges.size() != 2) {				// O(m/log(n))
+				if (++k == 8)
+					cout << "find it";
 				auto survived = copy.fuse(copy.getRandomEdge());
 				copy.removeSelfLoops(survived);
 			}
