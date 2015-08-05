@@ -189,7 +189,7 @@ namespace polygon {
 		list<Edge> edges;   // O(m)
 	};
 
-	void BreadthFirstSearch(Graph graph, Node* start) {
+	Node* BreadthFirstSearch(Graph graph, Node* start, string whatToFind) {
 			// O(m + n) = O(n)
 			// Warning! all nodes have to be initially unexplored
 			queue<Node*> q;
@@ -201,29 +201,26 @@ namespace polygon {
 				for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
 					Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
 					if (next->isExplored == false) {
+						if (next->content == whatToFind)
+							return next;
 						next->isExplored = true;
 						q.push(next);
 					}
 				}
 			}
 		}
-	vector<Edge*> findShortestPath() {
-		vector<Edge*> best;
-
-		queue<Node*> q;
-			q.push(start);
-			start->isExplored = true;
-
-			while (!q.empty()) {
-				Node* node = q.front(); q.pop();
-				for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
-					Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
-					if (next->isExplored == false) {
-						next->isExplored = true;
-						q.push(next);
-					}
-				}
+	Node* DepthFirstSearch(Graph graph, Node* start, string whatToFind) {
+		// Complexity: O(m + n)
+		// Caution: all nodes have to be unexplored
+		start->isExplored = true;
+		for (vector<Edge*>::iterator it = start->edges.begin(); it != start->edges.end(); it++) {
+			Node* next = ((*it)->from_ == start)? (*it)->to_ : (*it)->from_;
+			if (next->isExplored == false) {
+				next->isExplored = true;
+				return DepthFirstSearch(graph, next, whatToFind);
 			}
+		}
+		return nullptr;
 	}
 	vector<Graph> cutGraphs(Graph graph) {
 		graph.uncheckNodes();
@@ -244,12 +241,13 @@ namespace polygon {
 						Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
 						if (next->isExplored == false) {
 							current.add(*next);
-							// link them up
+							// link them up--
 							next->isExplored = true;
 							q.push(next);
 						}
 					}
 				}
+				result.push_back(current);
 			}
 		}
 	}
