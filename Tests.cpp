@@ -15,25 +15,25 @@ namespace polygon {
 	struct Node;  
 	struct Edge {
 	public:
-		Edge(Node* from, Node* to) : from_(from), to_(to) {} 
+		Edge(Node* from_, Node* to_) : from(from_), to(to_) {} 
 		~Edge() {}
 
 		bool operator==(const Edge& other) {
-			return (from_ == other.from_ && to_ == other.to_ || from_ == other.to_ && to_ == other.from_);
+			return (from == other.from && to == other.to || from == other.to && to == other.from);
 		}
 		bool operator!=(const Edge& other) {
 			return (!(*this == other));
 		}
 		bool isSelfLoop() {
-			return (from_ == to_);
+			return (from == to);
 		}
 
-		Node* from_;
-		Node* to_;
+		Node* from;
+		Node* to;
 	};
 	struct Node {
 	public:
-		Node(string content) : edges(), content(content), isExplored(false) {}
+		Node(string content) : edges(), label(content), isExplored(false) {}
 		~Node() {}
 		bool operator==(const Node& other) {
 			// if (this->edges.size() != other.edges.size())
@@ -48,25 +48,28 @@ namespace polygon {
 			// 	j++;
 			// }
 			
-			return this->content == other.content;
+			return this->label == other.label;
 		}
 
+		size_t f;
+		Node* leader; // for kosaragu's
 		bool isExplored;
 		vector<Edge*> edges;
-		string content;
+		string label;
 	};
 	class Graph {
 	public:
 		Graph(const Graph& graph) { // !
 			for (auto it = graph.nodes.begin(); it != graph.nodes.end(); it++)
-				this->nodes.push_back(Node {it->content});
+				this->nodes.push_back(Node {it->label});
 			for (auto it = graph.edges.begin(); it != graph.edges.end(); it++)
-				connect(it->from_, it->to_);
+				connect(it->from, it->to);
 		}
 		Graph() : nodes(), edges() {}
 		~Graph() {}
 		
 		Graph& operator=(const Graph& graph) {
+			// wut
 			Graph buf = Graph(graph);
 			this->swap(buf);
 			return *this;
@@ -87,7 +90,7 @@ namespace polygon {
 		}
 		Node* getNode(string content) {
 				for(auto i = nodes.begin(); i != nodes.end(); i++)
-					if (i->content == content)
+					if (i->label == content)
 						return &*i;
 
 			throw "Can't find this node";
@@ -121,10 +124,17 @@ namespace polygon {
 				it++;
 			return &*it;
 		}
+		void reverseEdges() {
+			for each (Edge edge in edges) {
+				Node* buf = edge.from;
+				edge.from = edge.to;
+				edge.to = buf;
+			}
+		}
 
 		bool areConnected(Node* a, Node* b) {
 			for (auto i = a->edges.begin(); i != a->edges.end(); i++)
-				if (*(*i)->from_ == *b || *(*i)->to_ == *b)
+				if (*(*i)->from == *b || *(*i)->to == *b)
 					return true;
 			
 			return false;
@@ -141,19 +151,19 @@ namespace polygon {
 		}
 		Node* fuse(Edge* edge) {
 			Edge weak = *edge;
-			Node* merged = edge->from_;
-			Node* extincted = edge->to_;
+			Node* merged = edge->from;
+			Node* extincted = edge->to;
 
 			// concat content and rebind edges
-			merged->content += "." + extincted->content;
+			merged->label += "." + extincted->label;
 			vector<Edge*>::iterator i = extincted->edges.begin();
 			while (i != extincted->edges.end()) {
 				if (**i != weak) {
 					merged->edges.push_back(&**i);
-					if ((*i)->from_ == extincted)
-						(*i)->from_ = merged;
+					if ((*i)->from == extincted)
+						(*i)->from = merged;
 					else 
-						(*i)->to_ = merged;
+						(*i)->to = merged;
 				}
 
 				i = extincted->edges.erase(i);
@@ -185,11 +195,12 @@ namespace polygon {
 			b->edges.push_back(pntr);
 		}
 		
+		bool isOrdered;
 		list<Node> nodes;	// O(n)
 		list<Edge> edges;   // O(m)
 	};
 
-	Node* BreadthFirstSearch(Graph graph, Node* start, string whatToFind) {
+	Node* BreadthFirstSearchCanon(Graph graph, Node* start, string whatToFind) { // Didn't tested
 			// O(m + n) = O(n)
 			// Warning! all nodes have to be initially unexplored
 			queue<Node*> q;
@@ -199,9 +210,9 @@ namespace polygon {
 			while (!q.empty()) {
 				Node* node = q.front(); q.pop();
 				for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
-					Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
+					Node* next = ((*edge)->from == node)? (*edge)->to : (*edge)->from;
 					if (next->isExplored == false) {
-						if (next->content == whatToFind)
+						if (next->label == whatToFind)
 							return next;
 						next->isExplored = true;
 						q.push(next);
@@ -209,79 +220,23 @@ namespace polygon {
 				}
 			}
 		}
-	Node* DepthFirstSearch(Graph graph, Node* start, string whatToFind) {
+	Node* DepthFirstSearchCanon(Graph graph, Node* start, string whatToFind) { // Didn't tested
 		// Complexity: O(m + n)
 		// Caution: all nodes have to be unexplored
 		start->isExplored = true;
 		for (vector<Edge*>::iterator it = start->edges.begin(); it != start->edges.end(); it++) {
-			Node* next = ((*it)->from_ == start)? (*it)->to_ : (*it)->from_;
+			Node* next = ((*it)->from == start)? (*it)->to : (*it)->from;
 			if (next->isExplored == false) {
+				if (next->label == whatToFind)
+					return next;
+
 				next->isExplored = true;
-				return DepthFirstSearch(graph, next, whatToFind);
+				return DepthFirstSearchCanon(graph, next, whatToFind);
 			}
 		}
 		return nullptr;
 	}
-	vector<Graph> cutGraphs(Graph graph) {
-		graph.uncheckNodes();
-		vector<Graph> result;
-
-		for (auto i = graph.nodes.begin(); i != graph.nodes.end(); i++) {
-			if (i->isExplored == false) {
-				Graph current;
-				current.add(*i);
-
-				queue<Node*> q;
-				q.push(&*i);
-				i->isExplored = true;
-
-				while (!q.empty()) {
-					Node* node = q.front(); q.pop();
-					for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
-						Node* next = ((*edge)->from_ == node)? (*edge)->to_ : (*edge)->from_;
-						if (next->isExplored == false) {
-							current.add(*next);
-							// link them up--
-							next->isExplored = true;
-							q.push(next);
-						}
-					}
-				}
-				result.push_back(current);
-			}
-		}
-	}
-	Graph getGraph(string fileName) {
-		ifstream input(fileName);
-		string line;
-		Graph result;
-		int i = 0, j = 0;
-		
-		while (getline(input, line)) {
-			istringstream stringStream(line);
-	
-			stringStream >> i; // first one
-			Node center(std::to_string(i));
-			if (!result.haveContent(center))
-				result.add(center);
-
-			while (stringStream >> j) {
-				
-				Node adjacent(std::to_string(j));
-				if (!result.haveContent(adjacent))
-					result.add(adjacent);
-
-				Node* it = result.getNode(center.content);
-				Node* jt = result.getNode(adjacent.content);
-
-				if (!result.areConnected(it, jt))
-					result.connect(it, jt);
-			}
-		}
-
-		return result;
-	}	
-	Graph KargerMinCut(Graph graph) {
+	Graph KargerMinCut(Graph graph) { // There's a bug i can't find
 		// Complexity: O(m*n^2)
 		size_t n = graph.edges.size();
 		Graph best = Graph(graph);
@@ -303,6 +258,133 @@ namespace polygon {
 
 		return best;
 	}
+	////////////////////////////////////
+	void DepthFirstSearch(Graph graph, Node* start, list<Node*>& l) {
+		// this function for Topological search
+		for (auto edge = start->edges.begin(); edge != start->edges.end(); edge++) {
+			Node* next = (*edge)->to;
+			if (next->isExplored == false) {
+				next->isExplored = true;
+				DepthFirstSearch(graph, next, l);
+			}
+		}
+
+		l.push_front(start);
+	}
+	list<Node*> TopologicalSort(Graph graph) { // Didn't tested
+		graph.uncheckNodes();
+		list<Node*> result;
+		for (auto node = graph.nodes.begin(); node != graph.nodes.end(); node++)  {
+			if (node->isExplored == false) {
+				node->isExplored = true;
+				DepthFirstSearch(graph, &*node, result);
+			}
+		}
+		return result;
+	};
+	////////////////////////////////////
+	static size_t nodesFinished = 0;
+	static Node* source = nullptr;
+	void DFS(Graph& graph, Node& node) {
+		node.isExplored = true;
+		node.leader = source;
+
+		for each (Edge* edge in node.edges) {
+			if (edge->to->isExplored == false)
+				DFS(graph, node);
+		}
+		node.f = ++nodesFinished;
+	}
+	void DFS_Loop(Graph& graph) {
+
+		// assume every nodes labeled 1 to n
+		for each (Node node in graph.nodes) {
+			if (node.isExplored == false) {
+				source = &node;
+				DFS(graph, node);
+			}
+		}
+	}
+	void KasaraguSCC(Graph graph) { // No tests at all
+		// Complexity: O(2(m + n)) = O(n)
+
+		// Part 1
+		graph.reverseEdges();
+
+		// Part 2 will compute magical ordering of nodes
+		DFS_Loop(graph);
+
+		// Part 3 will discover SCCs one by one
+		graph.reverseEdges();
+		DFS_Loop(graph);
+
+		// Get all things right
+		vector<vector<Node>> result;
+		for each (Node node in graph.nodes) {
+			result.at(stoi(node.label)).push_back(node);
+		}
+	}
+	////////////////////////////////////
+	vector<Graph> cutGraphs(Graph graph) { // Didn't tested
+		graph.uncheckNodes();
+		vector<Graph> result;
+
+		for (auto i = graph.nodes.begin(); i != graph.nodes.end(); i++) {
+			if (i->isExplored == false) {
+				Graph current;
+				current.add(*i);
+
+				queue<Node*> q;
+				q.push(&*i);
+				i->isExplored = true;
+
+				while (!q.empty()) {
+					Node* node = q.front(); q.pop();
+					for (auto edge = node->edges.begin(); edge != node->edges.end(); edge++) {
+						Node* next = ((*edge)->from == node)? (*edge)->to : (*edge)->from;
+						if (next->isExplored == false) {
+							current.add(*next);
+							// link them up--
+							next->isExplored = true;
+							q.push(next);
+						}
+					}
+				}
+				result.push_back(current);
+			}
+		}
+		return result;
+	}
+	Graph getGraph(string fileName) { 
+		ifstream input(fileName);
+		string line;
+		Graph result;
+		int i = 0, j = 0;
+		
+		while (getline(input, line)) {
+			istringstream stringStream(line);
+	
+			stringStream >> i; // first one
+			Node center(std::to_string(i));
+			if (!result.haveContent(center))
+				result.add(center);
+
+			while (stringStream >> j) {
+				
+				Node adjacent(std::to_string(j));
+				if (!result.haveContent(adjacent))
+					result.add(adjacent);
+
+				Node* it = result.getNode(center.label);
+				Node* jt = result.getNode(adjacent.label);
+
+				if (!result.areConnected(it, jt))
+					result.connect(it, jt);
+			}
+		}
+
+		return result;
+	}	
 	////////////////////////////////////
 	int* GenerateRandomArray(size_t size) {
 		int* arr = new int[size];
@@ -380,7 +462,6 @@ namespace polygon {
 	}
 	void RunGraphTests() {
 		Graph s = getGraph("Graph.txt");
-		BreadthFirstSearch(s, &*s.nodes.begin());
 		Graph result = KargerMinCut(s);
 		std::cout << "Minimum cut edges count: " << result.edges.size() << std::endl;
  	}
